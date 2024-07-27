@@ -16,6 +16,8 @@ public class PluginConfig extends Config {
         config.addDefault("database.port", 3306);
         config.addDefault("database.database", "database");
 
+        //bStats
+        config.addDefault("bstats.enabled", true);
 
         config.options().copyDefaults(true);
         save();
