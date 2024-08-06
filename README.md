@@ -15,3 +15,6 @@ Welcome to the SkyPvP Plugin! This plugin brings the excitement of SkyPvP to you
 1. Download the latest release of the SkyPvP plugin.
 2. Place the plugin jar file into your server's `plugins` directory.
 3. Restart your server to load the plugin.
+
+## Notes:
+* The plugin is in development phase and is not currently usable on a production server.
