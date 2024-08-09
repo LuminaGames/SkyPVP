@@ -1,6 +1,7 @@
 package lol.vedant.skypvp.perks.perk;
 
 import lol.vedant.skypvp.api.perks.Perk;
+import lol.vedant.skypvp.api.perks.PerkType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -18,6 +19,11 @@ public class SpeedPerk implements Perk {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public PerkType getType() {
+        return PerkType.SPEED;
     }
 
     @Override

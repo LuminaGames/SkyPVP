@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 public class SpawnExitEvent extends Event {
 
-    private final HandlerList handlerList = new HandlerList();
+    private static final HandlerList handlerList = new HandlerList();
     private final Player player;
 
     public SpawnExitEvent(Player player) {
@@ -20,5 +20,9 @@ public class SpawnExitEvent extends Event {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 }

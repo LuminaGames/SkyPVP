@@ -8,7 +8,7 @@ public class PlayerKillEvent extends Event {
 
     public final Player player;
     public final Player killer;
-    public HandlerList handlerList = new HandlerList();
+    public static HandlerList handlerList = new HandlerList();
 
     public PlayerKillEvent(Player player, Player killer) {
         this.player = player;
@@ -25,6 +25,10 @@ public class PlayerKillEvent extends Event {
 
     @Override
     public HandlerList getHandlers() {
+        return handlerList;
+    }
+
+    public static HandlerList getHandlerList() {
         return handlerList;
     }
 }

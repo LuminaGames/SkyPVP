@@ -3,6 +3,7 @@ package lol.vedant.skypvp.perks.perk;
 import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.events.PlayerKillEvent;
 import lol.vedant.skypvp.api.perks.Perk;
+import lol.vedant.skypvp.api.perks.PerkType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +24,11 @@ public class ExpPerk implements Perk, Listener {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public PerkType getType() {
+        return PerkType.EXPERIENCE;
     }
 
     @Override

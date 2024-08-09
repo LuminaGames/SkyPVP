@@ -2,10 +2,12 @@ package lol.vedant.skypvp.perks.perk;
 
 import lol.vedant.skypvp.api.events.PlayerKillEvent;
 import lol.vedant.skypvp.api.perks.Perk;
+import lol.vedant.skypvp.api.perks.PerkType;
 import lol.vedant.skypvp.api.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -22,6 +24,11 @@ public class BulldozerPerk implements Perk, Listener {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public PerkType getType() {
+        return PerkType.BULLDOZER;
     }
 
     @Override
@@ -46,9 +53,9 @@ public class BulldozerPerk implements Perk, Listener {
     }
 
     @EventHandler
-    public void onPlayerKill(PlayerKillEvent e) {
-        Player player = e.getPlayer();
-        Player killer = e.getKiller();
+    public void onPlayerKill(PlayerDeathEvent e) {
+        Player player = e.getEntity();
+        Player killer = player.getKiller();
         apply(killer);
         player.sendMessage(Utils.cc("&aYou got 5 seconds of strength for killing &c" + player.getName()));
     }
