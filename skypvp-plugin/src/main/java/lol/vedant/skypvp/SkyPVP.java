@@ -6,18 +6,22 @@ import lol.vedant.skypvp.commands.perks.PerkCommand;
 import lol.vedant.skypvp.commands.setup.SetSpawnCommand;
 import lol.vedant.skypvp.commands.setup.SetupCommand;
 import lol.vedant.skypvp.commands.setup.SpawnAreaCommand;
+import lol.vedant.skypvp.commands.stats.StatsCommand;
 import lol.vedant.skypvp.config.MessageConfig;
 import lol.vedant.skypvp.config.PluginConfig;
 import lol.vedant.skypvp.database.Database;
 import lol.vedant.skypvp.database.MySQL;
 import lol.vedant.skypvp.database.SQLite;
 import lol.vedant.skypvp.game.GameManager;
+import lol.vedant.skypvp.hooks.SkyPVPExpansion;
 import lol.vedant.skypvp.listener.*;
 import lol.vedant.skypvp.metrics.Metrics;
 import lol.vedant.skypvp.perks.PerkManager;
 import lol.vedant.skypvp.scoreboard.Scoreboard;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commandframework.CommandFramework;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +38,8 @@ public final class SkyPVP extends JavaPlugin {
     private PerkManager perkManager;
     private Economy economy;
     private Database database;
+
+    public static boolean PLACEHOLDER_API = false;
 
     @Override
     public void onEnable() {
@@ -68,6 +74,12 @@ public final class SkyPVP extends JavaPlugin {
 
         perkManager = new PerkManager();
 
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            PLACEHOLDER_API = true;
+            this.getLogger().info("Hooked into PlaceholderAPI");
+            new SkyPVPExpansion().register();
+        }
+
         registerEvents(
                 new PlayerLoginListener(),
                 new PlayerSelectionListener(),
@@ -80,7 +92,8 @@ public final class SkyPVP extends JavaPlugin {
                 new SetSpawnCommand(),
                 new SpawnAreaCommand(),
                 new SetupCommand(),
-                new PerkCommand()
+                new PerkCommand(),
+                new StatsCommand()
         );
 
         Scoreboard.initialize();
@@ -132,6 +145,13 @@ public final class SkyPVP extends JavaPlugin {
 
     public Database getDb() {
         return database;
+    }
+
+    public static String parsePlaceholder(Player player, String msg) {
+        if(PLACEHOLDER_API) {
+            return PlaceholderAPI.setPlaceholders(player, msg);
+        }
+        return msg;
     }
 }
 

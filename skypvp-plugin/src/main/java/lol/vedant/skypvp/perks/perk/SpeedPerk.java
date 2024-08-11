@@ -1,12 +1,17 @@
 package lol.vedant.skypvp.perks.perk;
 
+import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.perks.Perk;
 import lol.vedant.skypvp.api.perks.PerkType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class SpeedPerk implements Perk {
+public class SpeedPerk implements Perk, Listener {
 
     private final String name;
     private final long price;
@@ -33,8 +38,7 @@ public class SpeedPerk implements Perk {
 
     @Override
     public void apply(Player player) {
-        player.getActivePotionEffects().clear();
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 1));
     }
 
     @Override
@@ -45,5 +49,19 @@ public class SpeedPerk implements Perk {
     @Override
     public boolean isActive(Player player) {
         return player.hasPotionEffect(PotionEffectType.SPEED);
+    }
+
+    @EventHandler
+    public void onPlayerKill(PlayerDeathEvent e) {
+        Player player = e.getEntity().getPlayer();
+        Player killer = e.getEntity().getKiller();
+
+        if(killer == null) {
+            return;
+        }
+
+        if(SkyPVP.getPlugin().getDb().getActivePerk(killer.getUniqueId()).equals(PerkType.SPEED)) {
+            apply(killer);
+        }
     }
 }

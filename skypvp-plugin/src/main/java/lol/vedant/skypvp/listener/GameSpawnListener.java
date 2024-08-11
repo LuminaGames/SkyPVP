@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 public class GameSpawnListener implements Listener {
 
@@ -21,6 +22,12 @@ public class GameSpawnListener implements Listener {
     public void onPlayerSpawnEnter(SpawnEnterEvent e) {
         Player player = e.getPlayer();
         Titles.sendTitle(player, Utils.cc("&aEntered Spawn"), "");
+    }
+
+    //Disable hunger
+    @EventHandler
+    public void foodChangeEvent(FoodLevelChangeEvent e) {
+        e.setCancelled(true);
     }
 
     //Turn off natural entity spawning

@@ -150,14 +150,10 @@ public class PerksMenu extends FastInv {
         Economy economy = plugin.getEconomy();
         String pricePath = "perks." + perkType.name().toLowerCase() + ".price";
         double price = config.getDouble(pricePath);
-
-        // Check player's balance
         double playerBalance = economy.getBalance(player);
 
         if (playerBalance >= price) {
-            // Deduct currency
             economy.withdrawPlayer(player, price);
-            // Add perk to player's unlocked perks
             plugin.getDb().addPerk(player.getUniqueId(), perkType);
             return true;
         }

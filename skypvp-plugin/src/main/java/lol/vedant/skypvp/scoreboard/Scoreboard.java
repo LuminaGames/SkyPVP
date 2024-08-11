@@ -9,7 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static lol.vedant.skypvp.SkyPVP.config;
@@ -36,13 +38,22 @@ public class Scoreboard extends FastBoard {
             @Override
             public void run() {
                 if (player.isOnline()) {
-                    updateTitle(Utils.cc(config.getString(ConfigPath.SCOREBOARD_TITLE)));
-                    updateLines(config.getList(ConfigPath.SCOREBOARD_VALUES));
+                    String parsedTitle = SkyPVP.parsePlaceholder(player, Utils.cc(config.getString(ConfigPath.SCOREBOARD_TITLE)));
+                    updateTitle(parsedTitle);
+
+                    List<String> lines = config.getList(ConfigPath.SCOREBOARD_VALUES);
+                    if (lines != null) {
+                        List<String> parsedLines = new ArrayList<>();
+                        for (String line : lines) {
+                            parsedLines.add(SkyPVP.parsePlaceholder(player, line));
+                        }
+                        updateLines(parsedLines);
+                    }
                 } else {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L); // Update every second
+        }.runTaskTimer(plugin, 0L, 20L);
         this.taskId = task.getTaskId();
     }
 
@@ -59,9 +70,6 @@ public class Scoreboard extends FastBoard {
     }
 
     public static void initialize() {
-        // Register the event listener
-
-        // Initialize scoreboards for currently online players
         for (Player player : Bukkit.getOnlinePlayers()) {
             Scoreboard scoreboard = new Scoreboard(player);
             addPlayer(player, scoreboard);

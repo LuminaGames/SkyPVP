@@ -7,6 +7,7 @@ import lol.vedant.skypvp.api.perks.PerkType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffectType;
 
 public class ExpPerk implements Perk, Listener {
@@ -18,7 +19,6 @@ public class ExpPerk implements Perk, Listener {
     public ExpPerk(String name, long price) {
         this.name = name;
         this.price = price;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
@@ -38,12 +38,12 @@ public class ExpPerk implements Perk, Listener {
 
     @Override
     public void apply(Player player) {
-        player.giveExpLevels(2);
+        player.giveExpLevels(1);
     }
 
     @Override
     public void remove(Player player) {
-        player.giveExp(-2);
+        player.giveExp(-1);
     }
 
     @Override
@@ -52,9 +52,16 @@ public class ExpPerk implements Perk, Listener {
     }
 
     @EventHandler
-    public void onPlayerKill(PlayerKillEvent e) {
-        Player killer = e.getKiller();
-        apply(killer);
+    public void onPlayerKill(PlayerDeathEvent e) {
+        Player killer = e.getEntity().getKiller();
+
+        if(killer == null) {
+            return;
+        }
+
+        if(SkyPVP.getPlugin().getDb().getActivePerk(killer.getUniqueId()).equals(PerkType.EXPERIENCE)) {
+            apply(killer);
+        }
     }
 
 }
