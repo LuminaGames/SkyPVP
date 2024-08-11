@@ -1,4 +1,4 @@
-package lol.vedant.skypvp.commands.setup;
+package lol.vedant.skypvp.commands.admin.setup;
 
 import lol.vedant.skypvp.api.config.ConfigPath;
 import lol.vedant.skypvp.api.utils.Utils;

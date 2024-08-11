@@ -2,10 +2,11 @@ package lol.vedant.skypvp;
 
 import fr.mrmicky.fastinv.FastInvManager;
 import lol.vedant.skypvp.api.config.ConfigPath;
+import lol.vedant.skypvp.commands.admin.BuildModeCommand;
 import lol.vedant.skypvp.commands.perks.PerkCommand;
-import lol.vedant.skypvp.commands.setup.SetSpawnCommand;
-import lol.vedant.skypvp.commands.setup.SetupCommand;
-import lol.vedant.skypvp.commands.setup.SpawnAreaCommand;
+import lol.vedant.skypvp.commands.admin.setup.SetSpawnCommand;
+import lol.vedant.skypvp.commands.admin.setup.SetupCommand;
+import lol.vedant.skypvp.commands.admin.setup.SpawnAreaCommand;
 import lol.vedant.skypvp.commands.stats.StatsCommand;
 import lol.vedant.skypvp.config.MessageConfig;
 import lol.vedant.skypvp.config.PluginConfig;
@@ -93,7 +94,8 @@ public final class SkyPVP extends JavaPlugin {
                 new SpawnAreaCommand(),
                 new SetupCommand(),
                 new PerkCommand(),
-                new StatsCommand()
+                new StatsCommand(),
+                new BuildModeCommand()
         );
 
         Scoreboard.initialize();

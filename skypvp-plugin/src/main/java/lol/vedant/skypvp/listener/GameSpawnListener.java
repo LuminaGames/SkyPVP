@@ -1,16 +1,21 @@
 package lol.vedant.skypvp.listener;
 
 import com.cryptomorin.xseries.messages.Titles;
+import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.events.SpawnEnterEvent;
 import lol.vedant.skypvp.api.events.SpawnExitEvent;
 import lol.vedant.skypvp.api.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 public class GameSpawnListener implements Listener {
+
+    SkyPVP plugin = SkyPVP.getPlugin();
 
     @EventHandler
     public void onPlayerSpawnLeave(SpawnExitEvent e) {
@@ -33,8 +38,23 @@ public class GameSpawnListener implements Listener {
     //Turn off natural entity spawning
     @EventHandler
     public void onMobSpawn(EntitySpawnEvent e) {
-        if(!(e.getEntity() instanceof Player)) {
+        if (!(e.getEntity() instanceof Player)) {
 
+            e.setCancelled(true);
+        }
+    }
+
+    //Disable build
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent e) {
+        if (!plugin.getGameManager().hasBuildMode(e.getPlayer())) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockPlaceEvent e) {
+        if(!plugin.getGameManager().hasBuildMode(e.getPlayer())) {
             e.setCancelled(true);
         }
     }

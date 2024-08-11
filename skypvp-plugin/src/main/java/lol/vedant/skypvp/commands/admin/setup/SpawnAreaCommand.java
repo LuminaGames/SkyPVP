@@ -1,4 +1,4 @@
-package lol.vedant.skypvp.commands.setup;
+package lol.vedant.skypvp.commands.admin.setup;
 
 import lol.vedant.skypvp.api.item.SelectWand;
 import me.despical.commandframework.Command;

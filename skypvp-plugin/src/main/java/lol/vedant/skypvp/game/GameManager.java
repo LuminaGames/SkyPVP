@@ -4,6 +4,10 @@ import lol.vedant.skypvp.api.arena.SpawnArea;
 import lol.vedant.skypvp.api.config.ConfigPath;
 import lol.vedant.skypvp.api.utils.Utils;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static lol.vedant.skypvp.SkyPVP.config;
 
@@ -14,6 +18,8 @@ public class GameManager {
     private Location arenaMaxSpawn;
     private SpawnArea spawnArea;
     private boolean isSetup;
+
+    private List<Player> buildMode = new ArrayList<>();
 
     public void loadArena() {
         boolean isSpawnPresent = config.getYml().contains(ConfigPath.ARENA_SPAWN);
@@ -32,5 +38,19 @@ public class GameManager {
 
     public boolean isSetup() {
         return isSetup;
+    }
+
+    public void enableBuildMode(Player player) {
+        if (!buildMode.contains(player)) {
+            buildMode.add(player);
+        }
+    }
+
+    public void disableBuildMode(Player player) {
+        buildMode.remove(player);
+    }
+
+    public boolean hasBuildMode(Player player) {
+        return buildMode.contains(player);
     }
 }
