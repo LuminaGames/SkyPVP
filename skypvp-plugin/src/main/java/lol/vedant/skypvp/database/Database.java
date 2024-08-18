@@ -1,6 +1,7 @@
 package lol.vedant.skypvp.database;
 
 import lol.vedant.skypvp.api.perks.PerkType;
+import lol.vedant.skypvp.api.stats.KitStats;
 import lol.vedant.skypvp.api.stats.PerkStats;
 import lol.vedant.skypvp.api.stats.PlayerStats;
 import org.bukkit.entity.Player;
@@ -16,6 +17,10 @@ public interface Database {
     boolean hasStats(UUID player);
 
     PlayerStats getStats(UUID player);
+
+    KitStats getKitStats(UUID player);
+
+    void saveKitStats(UUID player, KitStats stats);
 
     void saveStats(UUID player, PlayerStats stats);
 

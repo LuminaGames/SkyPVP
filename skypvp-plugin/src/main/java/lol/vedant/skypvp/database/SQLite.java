@@ -2,6 +2,7 @@ package lol.vedant.skypvp.database;
 
 import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.perks.PerkType;
+import lol.vedant.skypvp.api.stats.KitStats;
 import lol.vedant.skypvp.api.stats.PerkStats;
 import lol.vedant.skypvp.api.stats.PlayerStats;
 import org.bukkit.entity.Player;
@@ -79,10 +80,24 @@ public class SQLite implements Database {
                 "exp_perk BOOLEAN DEFAULT FALSE," +
                 "speed_perk BOOLEAN DEFAULT FALSE," +
                 "active_perk VARCHAR(255))";
+        String sql3 = "CREATE TABLE IF NOT EXISTS skypvp_kits (" +
+                "uuid VARCHAR(255) PRIMARY KEY," +
+                "warrior_kit BOOLEAN DEFAULT FALSE," +
+                "archer_kit BOOLEAN DEFAULT FALSE," +
+                "tank_kit BOOLEAN DEFAULT FALSE," +
+                "assassin_kit BOOLEAN DEFAULT FALSE," +
+                "pyro_kit BOOLEAN DEFAULT FALSE," +
+                "sniper_kit BOOLEAN DEFAULT FALSE," +
+                "vampire_kit BOOLEAN DEFAULT FALSE," +
+                "knight_kit BOOLEAN DEFAULT FALSE," +
+                "ninja_kit BOOLEAN DEFAULT FALSE," +
+                "thor_kit BOOLEAN DEFAULT FALSE," +
+                "healer_kit BOOLEAN DEFAULT FALSE);";
         try (Connection connection = DriverManager.getConnection(url);
              Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             stmt.execute(sql2);
+            stmt.execute(sql3);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -128,6 +143,75 @@ public class SQLite implements Database {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public KitStats getKitStats(UUID player) {
+        String sql = "SELECT * FROM skypvp_kits WHERE uuid = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, player.toString());
+            KitStats stats = new KitStats();
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()) {
+                stats.setWarriorKit(rs.getBoolean("warrior_kit"));
+                stats.setArcherKit(rs.getBoolean("archer_kit"));
+                stats.setAssassinKit(rs.getBoolean("assassin_kit"));
+                stats.setHealerKit(rs.getBoolean("healer_kit"));
+                stats.setKnightKit(rs.getBoolean("knight_kit"));
+                stats.setNinjaKit(rs.getBoolean("ninja_kit"));
+                stats.setPyroKit(rs.getBoolean("pyro_kit"));
+                stats.setSniperKit(rs.getBoolean("sniper_kit"));
+                stats.setTankKit(rs.getBoolean("tank_kit"));
+                stats.setThorKit(rs.getBoolean("thor_kit"));
+                stats.setVampireKit(rs.getBoolean("vampire_kit"));
+                return stats;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public void saveKitStats(UUID player, KitStats stats) {
+        String sql = "UPDATE skypvp_kits SET " +
+                "warrior_kit = ?, " +
+                "archer_kit = ?, " +
+                "tank_kit = ?, " +
+                "assassin_kit = ?, " +
+                "pyro_kit = ?, " +
+                "sniper_kit = ?, " +
+                "vampire_kit = ?, " +
+                "knight_kit = ?, " +
+                "ninja_kit = ?, " +
+                "thor_kit = ?, " +
+                "healer_kit = ? " +
+                "WHERE uuid = ?";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setBoolean(1, stats.isWarriorKit());
+            statement.setBoolean(2, stats.isArcherKit());
+            statement.setBoolean(3, stats.isTankKit());
+            statement.setBoolean(4, stats.isAssassinKit());
+            statement.setBoolean(5, stats.isPyroKit());
+            statement.setBoolean(6, stats.isSniperKit());
+            statement.setBoolean(7, stats.isVampireKit());
+            statement.setBoolean(8, stats.isKnightKit());
+            statement.setBoolean(9, stats.isNinjaKit());
+            statement.setBoolean(10, stats.isThorKit());
+            statement.setBoolean(11, stats.isHealerKit());
+            statement.setString(12, player.toString());
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
