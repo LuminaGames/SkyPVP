@@ -5,6 +5,7 @@ import com.cryptomorin.xseries.XSound;
 import fr.mrmicky.fastinv.FastInv;
 import fr.mrmicky.fastinv.ItemBuilder;
 import lol.vedant.skypvp.SkyPVP;
+import lol.vedant.skypvp.api.config.Message;
 import lol.vedant.skypvp.api.perks.PerkType;
 import lol.vedant.skypvp.api.stats.PerkStats;
 import lol.vedant.skypvp.api.utils.Utils;
@@ -15,10 +16,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static lol.vedant.skypvp.SkyPVP.config;
+import static lol.vedant.skypvp.SkyPVP.messages;
 
 public class PerksMenu extends FastInv {
 
@@ -37,18 +38,18 @@ public class PerksMenu extends FastInv {
 
     private void setItems() {
         ItemStack bulldozerItem = new ItemBuilder(XMaterial.NETHER_WART.parseMaterial())
-                .name(Utils.cc("&6Bulldozer Perk"))
-                .lore(Utils.cc(Arrays.asList("&7On killing a player get", "&7Strength I effect for 3 seconds", "", "{perkStats}")))
+                .name(Utils.cc(messages.getString(Message.PERK_BULLDOZER_TITLE)))
+                .lore(Utils.cc(messages.getString(Message.PERK_BULLDOZER_DESCRIPTION)))
                 .build();
 
         ItemStack expItem = new ItemBuilder(XMaterial.ANVIL.parseMaterial())
-                .name(Utils.cc("&6Experience Perk"))
-                .lore(Utils.cc(Arrays.asList("&7On killing a player get", "&7a level of experience level", "", "{perkStats}")))
+                .name(Utils.cc(messages.getString(Message.PERK_EXPERIENCE_TITLE)))
+                .lore(Utils.cc(messages.getString(Message.PERK_EXPERIENCE_DESCRIPTION)))
                 .build();
 
         ItemStack speedItem = new ItemBuilder(XMaterial.FEATHER.parseMaterial())
-                .name(Utils.cc("&6Speed Perk"))
-                .lore(Utils.cc(Arrays.asList("&7On killing a player get", "&7Speed II effect for 5 seconds", "", "{perkStats}")))
+                .name(Utils.cc(messages.getString(Message.PERK_SPEED_TITLE)))
+                .lore(Utils.cc(messages.getString(Message.PERK_SPEED_DESCRIPTION)))
                 .build();
 
         this.perkStats = plugin.getDb().getPerks(player.getUniqueId());
@@ -95,21 +96,21 @@ public class PerksMenu extends FastInv {
         }
 
         if(perk == activePerk) {
-            player.sendMessage(Utils.cc("&cThat perk is already active"));
+            player.sendMessage(Utils.cc(messages.getString(Message.PERK_ALREADY_ACTIVE)));
             player.playSound(player.getLocation(), XSound.BLOCK_ANVIL_FALL.parseSound(), 1, 1);
         } else if(isPerkUnlocked(perk)) {
             plugin.getDb().setActivePerk(player.getUniqueId(), perk);
-            player.sendMessage("&aYou have equipped the " + perk.name() + "perk");
+            player.sendMessage(messages.getString(Message.PERK_EQUIPPED));
             player.playSound(player.getLocation(), XSound.ENTITY_EXPERIENCE_ORB_PICKUP.parseSound(), 1, 1);
             refresh();
         } else {
             if (buyPerk(player, perk)) {
                 plugin.getDb().setActivePerk(player.getUniqueId(), perk);
-                player.sendMessage(Utils.cc("&aYou have purchased and equipped the " + perk.name() + " perk."));
+                player.sendMessage(Utils.cc(messages.getString(Message.PERK_PURCHASED_SUCCESSFULLY)));
                 player.playSound(player.getLocation(), XSound.ENTITY_EXPERIENCE_ORB_PICKUP.parseSound(), 1, 1);
                 refresh();
             } else {
-                player.sendMessage(Utils.cc("&cYou do not have enough coins to purchase this perk."));
+                player.sendMessage(Utils.cc(messages.getString(Message.NOT_ENOUGH_BALANCE)));
                 player.playSound(player.getLocation(), XSound.BLOCK_ANVIL_FALL.parseSound(), 1, 1);
             }
         }
