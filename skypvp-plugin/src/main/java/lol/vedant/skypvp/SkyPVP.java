@@ -2,11 +2,11 @@ package lol.vedant.skypvp;
 
 import fr.mrmicky.fastinv.FastInvManager;
 import lol.vedant.skypvp.api.config.ConfigPath;
+import lol.vedant.skypvp.api.kit.KitSerializer;
 import lol.vedant.skypvp.commands.admin.BuildModeCommand;
+import lol.vedant.skypvp.commands.admin.setup.*;
+import lol.vedant.skypvp.commands.kit.PreviewKitCommand;
 import lol.vedant.skypvp.commands.perks.PerkCommand;
-import lol.vedant.skypvp.commands.admin.setup.SetSpawnCommand;
-import lol.vedant.skypvp.commands.admin.setup.SetupCommand;
-import lol.vedant.skypvp.commands.admin.setup.SpawnAreaCommand;
 import lol.vedant.skypvp.commands.stats.StatsCommand;
 import lol.vedant.skypvp.config.MessageConfig;
 import lol.vedant.skypvp.config.PluginConfig;
@@ -15,6 +15,7 @@ import lol.vedant.skypvp.database.MySQL;
 import lol.vedant.skypvp.database.SQLite;
 import lol.vedant.skypvp.game.GameManager;
 import lol.vedant.skypvp.hooks.SkyPVPExpansion;
+import lol.vedant.skypvp.kit.KitManager;
 import lol.vedant.skypvp.listener.*;
 import lol.vedant.skypvp.metrics.Metrics;
 import lol.vedant.skypvp.perks.PerkManager;
@@ -37,6 +38,8 @@ public final class SkyPVP extends JavaPlugin {
     private CommandFramework commandManager;
     private GameManager gameManager;
     private PerkManager perkManager;
+    private KitSerializer kitSerializer;
+    private KitManager kitManager;
     private Economy economy;
     private Database database;
 
@@ -66,6 +69,10 @@ public final class SkyPVP extends JavaPlugin {
             database.init();
         }
 
+        kitSerializer = new KitSerializer(this);
+
+        kitManager = new KitManager(this);
+        kitManager.load();
 
         if(!setupEconomy()) {
             getLogger().severe("Plugin disabled due to no Vault dependency found!");
@@ -95,7 +102,10 @@ public final class SkyPVP extends JavaPlugin {
                 new SetupCommand(),
                 new PerkCommand(),
                 new StatsCommand(),
-                new BuildModeCommand()
+                new BuildModeCommand(),
+                new TestKitCmd(),
+                new GiveKitCmd(),
+                new PreviewKitCommand(this)
         );
 
         Scoreboard.initialize();
@@ -147,6 +157,14 @@ public final class SkyPVP extends JavaPlugin {
 
     public Database getDb() {
         return database;
+    }
+
+    public KitSerializer getKitSerializer() {
+        return kitSerializer;
+    }
+
+    public KitManager getKitManager() {
+        return kitManager;
     }
 
     public static String parsePlaceholder(Player player, String msg) {

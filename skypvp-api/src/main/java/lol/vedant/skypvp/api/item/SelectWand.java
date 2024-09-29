@@ -11,8 +11,8 @@ import java.util.List;
 public class SelectWand extends ItemStack {
 
     public SelectWand() {
-        super(Material.BLAZE_ROD); // Set the type of the ItemStack in the constructor
-        ItemMeta itemMeta = this.getItemMeta(); // Retrieve the ItemMeta after setting the type
+        super(Material.BLAZE_ROD);
+        ItemMeta itemMeta = this.getItemMeta();
         if (itemMeta != null) {
             itemMeta.setDisplayName(Utils.cc("&a&lSelect Wand"));
             List<String> lore = new ArrayList<>();

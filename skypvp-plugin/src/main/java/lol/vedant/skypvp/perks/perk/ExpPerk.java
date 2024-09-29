@@ -1,7 +1,7 @@
 package lol.vedant.skypvp.perks.perk;
 
+import com.cryptomorin.xseries.XPotion;
 import lol.vedant.skypvp.SkyPVP;
-import lol.vedant.skypvp.api.events.PlayerKillEvent;
 import lol.vedant.skypvp.api.perks.Perk;
 import lol.vedant.skypvp.api.perks.PerkType;
 import org.bukkit.entity.Player;
@@ -48,7 +48,7 @@ public class ExpPerk implements Perk, Listener {
 
     @Override
     public boolean isActive(Player player) {
-        return player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE);
+        return player.hasPotionEffect(XPotion.STRENGTH.getPotionEffectType());
     }
 
     @EventHandler

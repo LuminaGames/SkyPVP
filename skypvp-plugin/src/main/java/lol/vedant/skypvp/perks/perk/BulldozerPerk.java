@@ -1,5 +1,6 @@
 package lol.vedant.skypvp.perks.perk;
 
+import com.cryptomorin.xseries.XPotion;
 import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.perks.Perk;
 import lol.vedant.skypvp.api.perks.PerkType;
@@ -39,7 +40,7 @@ public class BulldozerPerk implements Perk, Listener {
 
     @Override
     public void apply(Player player) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 100, 0));
+        player.addPotionEffect(new PotionEffect(XPotion.STRENGTH.getPotionEffectType(), 100, 0));
     }
 
     @Override
@@ -49,7 +50,7 @@ public class BulldozerPerk implements Perk, Listener {
 
     @Override
     public boolean isActive(Player player) {
-        return player.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE);
+        return player.hasPotionEffect(XPotion.STRENGTH.getPotionEffectType());
     }
 
     @EventHandler

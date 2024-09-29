@@ -47,6 +47,9 @@ public class SkyPVPExpansion extends PlaceholderExpansion {
         }
 
         if(args.endsWith("ratio")) {
+            if(stats.getDeaths() == 0) {
+                return "0";
+            }
             return String.format("%h", stats.getKills() / stats.getDeaths());
         }
 

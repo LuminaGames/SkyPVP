@@ -22,7 +22,6 @@ public class PlayerDeathListener implements Listener {
 
         // Instant Respawn
         player.spigot().respawn();
-
         // Check if killer is null
         if (killer == null) {
             // Handle death without a killer
@@ -64,5 +63,10 @@ public class PlayerDeathListener implements Listener {
         // Increment and save death stats for the player
         playerStats.setDeaths(playerStats.getDeaths() + 1);
         plugin.getDb().saveStats(player.getUniqueId(), playerStats);
+
+        //Add coins to the killer
+        plugin.getEconomy().depositPlayer(killer, 5);
+        killer.sendMessage(Utils.cc("&6+5 Coins (Player Kill)"));
+
     }
 }

@@ -1,11 +1,9 @@
 package lol.vedant.skypvp.database;
 
-import com.avaje.ebeaninternal.api.SpiSqlQuery;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.config.ConfigPath;
-import lol.vedant.skypvp.api.perks.Perk;
 import lol.vedant.skypvp.api.perks.PerkType;
 import lol.vedant.skypvp.api.stats.KitStats;
 import lol.vedant.skypvp.api.stats.PerkStats;

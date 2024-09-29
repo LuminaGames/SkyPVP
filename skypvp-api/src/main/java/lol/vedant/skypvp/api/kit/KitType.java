@@ -1,15 +1,19 @@
 package lol.vedant.skypvp.api.kit;
 
 public enum KitType {
-    WARRIOR,
-    ARCHER,
-    TANK,
-    ASSASSIN,
-    PYRO,
-    SNIPER,
-    VAMPIRE,
+    BERSERKER,
+    SCOUT,
+    GLADIATOR,
+    SHADOW,
+    GUARDIAN,
+    SWORDSMAN,
+    HUNTER,
+    MINER,
     KNIGHT,
-    NINJA,
-    THOR,
-    HEALER;
+    ARCHER,
+    VIKING,
+    PIRATE,
+    SAMURAI,
+    PALADIN,
+    WARLOCK
 }
