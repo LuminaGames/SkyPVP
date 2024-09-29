@@ -1,0 +1,4 @@
+name: SkyPVP
+version: '${project.version}'
+main: lol.vedant.skypvp.SkyPVP
+api-version: "1.13"
