@@ -1,5 +1,6 @@
 package lol.vedant.skypvp.database;
 
+import com.google.gson.*;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lol.vedant.skypvp.SkyPVP;
@@ -11,6 +12,8 @@ import lol.vedant.skypvp.api.stats.PlayerStats;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -119,17 +122,7 @@ public class MySQL implements Database {
                 "active_perk VARCHAR(255))";
         String sql3 = "CREATE TABLE IF NOT EXISTS skypvp_kits (" +
                 "uuid VARCHAR(255) PRIMARY KEY," +
-                "warrior_kit BOOLEAN DEFAULT FALSE," +
-                "archer_kit BOOLEAN DEFAULT FALSE," +
-                "tank_kit BOOLEAN DEFAULT FALSE," +
-                "assassin_kit BOOLEAN DEFAULT FALSE," +
-                "pyro_kit BOOLEAN DEFAULT FALSE," +
-                "sniper_kit BOOLEAN DEFAULT FALSE," +
-                "vampire_kit BOOLEAN DEFAULT FALSE," +
-                "knight_kit BOOLEAN DEFAULT FALSE," +
-                "ninja_kit BOOLEAN DEFAULT FALSE," +
-                "thor_kit BOOLEAN DEFAULT FALSE," +
-                "healer_kit BOOLEAN DEFAULT FALSE);";
+                "unlocked_kits LONGTEXT);";
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             stmt.execute(sql);
@@ -181,7 +174,7 @@ public class MySQL implements Database {
     }
 
     @Override
-    public KitStats getKitStats(UUID player) {
+    public List<String> getKitStats(UUID player) {
         String sql = "SELECT * FROM skypvp_kits WHERE uuid = ?";
         try(Connection connection = dataSource.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -189,19 +182,14 @@ public class MySQL implements Database {
             KitStats stats = new KitStats();
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()) {
-                stats.setWarriorKit(rs.getBoolean("warrior_kit"));
-                stats.setArcherKit(rs.getBoolean("archer_kit"));
-                stats.setAssassinKit(rs.getBoolean("assassin_kit"));
-                stats.setHealerKit(rs.getBoolean("healer_kit"));
-                stats.setKnightKit(rs.getBoolean("knight_kit"));
-                stats.setNinjaKit(rs.getBoolean("ninja_kit"));
-                stats.setPyroKit(rs.getBoolean("pyro_kit"));
-                stats.setSniperKit(rs.getBoolean("sniper_kit"));
-                stats.setTankKit(rs.getBoolean("tank_kit"));
-                stats.setThorKit(rs.getBoolean("thor_kit"));
-                stats.setVampireKit(rs.getBoolean("vampire_kit"));
-                return stats;
+            if (rs.next()) {
+
+                Gson gson = new Gson();
+                List<String> unlockedKits = new ArrayList<>();
+                JsonElement jelem = gson.fromJson(rs.getString("unlocked_kits"), JsonElement.class);
+                jelem.getAsJsonObject().getAsJsonArray().forEach(k -> unlockedKits.add(k.getAsString()));
+
+                return unlockedKits;
             }
 
         } catch (SQLException e) {
@@ -212,38 +200,40 @@ public class MySQL implements Database {
     }
 
     @Override
-    public void saveKitStats(UUID player, KitStats stats) {
-        String sql = "UPDATE skypvp_kits SET " +
-                "warrior_kit = ?, " +
-                "archer_kit = ?, " +
-                "tank_kit = ?, " +
-                "assassin_kit = ?, " +
-                "pyro_kit = ?, " +
-                "sniper_kit = ?, " +
-                "vampire_kit = ?, " +
-                "knight_kit = ?, " +
-                "ninja_kit = ?, " +
-                "thor_kit = ?, " +
-                "healer_kit = ? " +
-                "WHERE uuid = ?";
+    public void saveKitStats(UUID player, String kitId) {
+        String sql1 = "SELECT * FROM skypvp_kits WHERE uuid = ?";
+        String sql2 = "INSERT INTO skypvp_kits (uuid, unlocked_kits) VALUES (?, ?)";
+        String sql3 = "UPDATE skypvp_kits SET unlocked_kits = ? WHERE uuid = ?";
 
-        try (Connection connection  = dataSource.getConnection()) {
-             PreparedStatement statement = connection.prepareStatement(sql);
+        Gson gson = new Gson();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement selectPs = connection.prepareStatement(sql1);
+            selectPs.setString(1, player.toString());
+            ResultSet rs = selectPs.executeQuery();
 
-            statement.setBoolean(1, stats.isWarriorKit());
-            statement.setBoolean(2, stats.isArcherKit());
-            statement.setBoolean(3, stats.isTankKit());
-            statement.setBoolean(4, stats.isAssassinKit());
-            statement.setBoolean(5, stats.isPyroKit());
-            statement.setBoolean(6, stats.isSniperKit());
-            statement.setBoolean(7, stats.isVampireKit());
-            statement.setBoolean(8, stats.isKnightKit());
-            statement.setBoolean(9, stats.isNinjaKit());
-            statement.setBoolean(10, stats.isThorKit());
-            statement.setBoolean(11, stats.isHealerKit());
-            statement.setString(12, player.toString());
+            JsonArray unlockedKitsJson;
+            if (rs.next()) {
+                // Retrieve existing unlocked kits
+                String unlockedKitsString = rs.getString("unlocked_kits");
+                unlockedKitsJson = gson.fromJson(unlockedKitsString, JsonArray.class);
+                if (!unlockedKitsJson.contains(gson.toJsonTree(kitId))) {
+                    unlockedKitsJson.add(kitId);
+                }
+                // Update existing entry
+                PreparedStatement updatePs = connection.prepareStatement(sql3);
+                updatePs.setString(1, gson.toJson(unlockedKitsJson));
+                updatePs.setString(2, player.toString());
+                updatePs.executeUpdate();
+            } else {
+                // Create new entry
+                unlockedKitsJson = new JsonArray();
+                unlockedKitsJson.add(kitId);
+                PreparedStatement insertPs = connection.prepareStatement(sql2);
+                insertPs.setString(1, player.toString());
+                insertPs.setString(2, gson.toJson(unlockedKitsJson));
+                insertPs.executeUpdate();
+            }
 
-            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -307,12 +297,6 @@ public class MySQL implements Database {
         }
     }
 
-    /*
-    Perk names
-    bulldozer = Bulldozer Perk
-    experience = Exp perk
-    speed = Speed Perk
-     */
     @Override
     public void addPerk(UUID player, PerkType perk) {
         String sql;

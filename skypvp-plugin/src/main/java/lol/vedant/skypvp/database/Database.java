@@ -6,6 +6,7 @@ import lol.vedant.skypvp.api.stats.PerkStats;
 import lol.vedant.skypvp.api.stats.PlayerStats;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface Database {
@@ -18,9 +19,9 @@ public interface Database {
 
     PlayerStats getStats(UUID player);
 
-    KitStats getKitStats(UUID player);
+    List<String> getKitStats(UUID player);
 
-    void saveKitStats(UUID player, KitStats stats);
+    void saveKitStats(UUID player, String id);
 
     void saveStats(UUID player, PlayerStats stats);
 
