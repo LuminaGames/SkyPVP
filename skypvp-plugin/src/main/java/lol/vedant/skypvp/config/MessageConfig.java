@@ -13,6 +13,24 @@ public class MessageConfig extends Config {
         super(plugin, name, dir);
 
         YamlConfiguration config = this.getYml();
+        config.addDefault(Message.HELP_MESSAGE_1, Arrays.asList(
+                "&6&lSkyPVP Plugin Help - Commands",
+                "",
+                "&6/perks &7- &fTo view/buy perks",
+                "&6/kit &7- &fBuy/Preview/Equip Kit from the kits menu",
+                "&6/stats &7- &fView your SkyPVP stats",
+                "&6/skypvp admin &7- &fView admin commands"
+        ));
+
+        config.addDefault(Message.HELP_MESSAGE_ADMIN_1, Arrays.asList(
+                "&6&lSkyPVP Admin Help - Commands",
+                "",
+                "&6/skypvp setup &7- &fSetup the skypvp plugin",
+                "&6/skypvp build &7- &fToggle build mode",
+                "&6/skypvp setspawn &7- &fSet the spawn position for login and death",
+                "&6/skypvp spawnarea &7- &fAdjust the spawn area"
+        ));
+
         config.addDefault(Message.KILL_MESSAGE_FORMAT, "{prefix} &6{player} &fhas been killed by &c{killer}");
         config.addDefault(Message.KILL_MESSAGE_PROJECTILE, "{prefix} &6{player} &fwas shot by &c{killer}");
         config.addDefault(Message.KILL_MESSAGE_VOID, "{prefix} &6{player} &fwas thrown into the void by &c{killer}");
@@ -29,6 +47,7 @@ public class MessageConfig extends Config {
         config.addDefault(Message.PERK_PURCHASED_SUCCESSFULLY, "&aThe perk was purchased successfully.");
         config.addDefault(Message.PERK_EQUIPPED, "&aPerk was equipped successfully");
         config.addDefault(Message.NOT_ENOUGH_BALANCE, "&cYou do not have enough balance to purchase this.");
+
 
         config.options().copyDefaults(true);
         save();
