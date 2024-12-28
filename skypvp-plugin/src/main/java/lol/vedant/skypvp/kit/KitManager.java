@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("ALL")
 public class KitManager {
 
     private SkyPVP plugin;
@@ -33,7 +34,7 @@ public class KitManager {
                 String id = kit.getName().replace(".yml", "");
                 Kit k = plugin.getKitSerializer().loadKit(id);
                 loadedKits.put(id, k);
-                plugin.getLogger().info("Kit " + id + "was loaded successfully");
+                plugin.getLogger().info("Kit " + id + " was loaded successfully");
             }
         }
     }
@@ -69,6 +70,10 @@ public class KitManager {
 
     public Kit getKitById(String id) {
         return loadedKits.get(id);
+    }
+
+    public Map<String, Kit> getLoadedKits() {
+        return loadedKits;
     }
 
 

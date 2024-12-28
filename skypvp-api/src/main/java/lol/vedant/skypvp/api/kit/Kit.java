@@ -23,6 +23,7 @@ public class Kit {
     private ItemStack kitBoots;
 
     private ItemStack displayIcon;
+    private int price;
 
     private ItemStack offHand;
 
@@ -96,5 +97,21 @@ public class Kit {
 
     public void setOffHand(ItemStack offHand) {
         this.offHand = offHand;
+    }
+
+    public ItemStack getDisplayIcon() {
+        return displayIcon;
+    }
+
+    public void setDisplayIcon(ItemStack displayIcon) {
+        this.displayIcon = displayIcon;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }
