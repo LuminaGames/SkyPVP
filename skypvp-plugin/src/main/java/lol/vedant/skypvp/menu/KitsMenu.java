@@ -39,20 +39,24 @@ public class KitsMenu extends FastInv {
             ItemStack displayItem;
 
             if(kit.getDisplayIcon() == null) {
-                displayItem = new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial()).name(kit.getId()).build();
+                displayItem = new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
+                        .name(kit.getDisplayName())
+                        .lore("&7Left-click to buy", "&7Right-click to preview")
+                        .build();
             } else {
                 displayItem = new ItemBuilder(kit.getDisplayIcon())
-                        .name("&a" + kit.getId())
+                        .name(kit.getDisplayName())
                         .lore("&7Left-click to buy", "&7Right-click to preview")
                         .build();
             }
 
-
-
             setItem(i - startIndex, displayItem, e -> {
                 Player player = (Player) e.getWhoClicked();
+                List<String> unlockedKits = SkyPVP.getPlugin().getDb().getKitStats(player.getUniqueId());
                 if (e.isLeftClick()) {
-                    if(SkyPVP.getPlugin().getDb().getKitStats(player.getUniqueId()).contains(kit.getId())) {
+                    if(unlockedKits != null && unlockedKits.contains(kit.getId())) {
+                        SkyPVP.getPlugin().getKitManager().giveKit(player, kit);
+                    } else if(kit.getPrice() == 0) {
                         SkyPVP.getPlugin().getKitManager().giveKit(player, kit);
                     } else {
                         new ConfirmPurchaseMenu(kit).open(player);

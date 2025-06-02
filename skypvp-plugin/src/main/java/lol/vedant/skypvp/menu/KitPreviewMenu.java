@@ -14,6 +14,9 @@ public class KitPreviewMenu extends FastInv {
 
         // Add inventory items
         for (Map.Entry<Integer, ItemStack> entry : kit.getInventory().entrySet()) {
+            if(entry.getKey() > 35) {
+                break;
+            }
             setItem(entry.getKey(), entry.getValue());
         }
 

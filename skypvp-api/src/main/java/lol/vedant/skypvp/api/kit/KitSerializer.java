@@ -3,6 +3,8 @@ package lol.vedant.skypvp.api.kit;
 import com.cryptomorin.xseries.XItemStack;
 import com.cryptomorin.xseries.XMaterial;
 import lol.vedant.skypvp.api.utils.Utils;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -61,18 +63,21 @@ public class KitSerializer {
         ItemStack[] armorContents = inventory.getArmorContents();
         for (int slot = 0; slot < armorContents.length; slot++) {
             ItemStack item = armorContents[slot];
-            if (item != null) {
-                Map<String, Object> serializedItem = XItemStack.serialize(item);
-                config.set("kit." + id + ".armor." + slot, serializedItem);
+            if (item == null || item.getType() == Material.AIR) {
+                continue; // Skip null or air items
             }
+
+            Map<String, Object> serializedItem = XItemStack.serialize(item);
+            config.set("kit." + id + ".armor." + slot, serializedItem);
         }
 
         ItemStack displayItem = XMaterial.IRON_SWORD.parseItem();
         ItemMeta meta = displayItem.getItemMeta();
         meta.setDisplayName(Utils.cc("&7&l" + id + " Kit"));
-        meta.setLore(Utils.cc(Arrays.asList("&7Left-Click to buy", "RIght-Click to preview kit")));
+        meta.setLore(Utils.cc(Arrays.asList("&7Left-Click to buy", "Right-Click to preview kit")));
 
         config.set("kit." + id + ".displayItem", XItemStack.serialize(displayItem));
+        config.set("kit." + id + ".displayName", id);
 
         // Save Potion Effects
         int effectIndex = 0;
@@ -98,6 +103,8 @@ public class KitSerializer {
 
         YamlConfiguration config = YamlConfiguration.loadConfiguration(kitFile);
         Kit kit = new Kit(id);
+        int price = config.getInt("kit." + id + ".price");
+        kit.setPrice(price);
 
         // Load Inventory
         Map<Integer, ItemStack> inventory = new HashMap<>();
@@ -110,18 +117,21 @@ public class KitSerializer {
 
         // Load Armor
         ItemStack[] armorContents = new ItemStack[4];
-        for (String key : config.getConfigurationSection("kit." + id + ".armor").getKeys(false)) {
-            int slot = Integer.parseInt(key);
-            ItemStack item = XItemStack.deserialize(config.getConfigurationSection("kit." + id + ".armor." + slot).getValues(true));
-            armorContents[slot] = item;
-        }
-        if (armorContents.length > 0) {
-            kit.setKitHelmet(armorContents[0]);
-            kit.setKitChestplate(armorContents[1]);
-            kit.setKitLeggings(armorContents[2]);
-            kit.setKitBoots(armorContents[3]);
-        }
+        if(config.getConfigurationSection("kit." + id + ".armor") != null) {
 
+            for (String key : config.getConfigurationSection("kit." + id + ".armor").getKeys(false)) {
+                int slot = Integer.parseInt(key);
+
+                ItemStack item = XItemStack.deserialize(config.getConfigurationSection("kit." + id + ".armor." + slot).getValues(true));
+                armorContents[slot] = item;
+            }
+            if (armorContents.length > 0) {
+                kit.setKitHelmet(armorContents[3]);
+                kit.setKitChestplate(armorContents[2]);
+                kit.setKitLeggings(armorContents[1]);
+                kit.setKitBoots(armorContents[0]);
+            }
+        }
         // Load Potion Effects
         //List<PotionEffect> potionEffects = new ArrayList<>();
         //for (String key : config.getConfigurationSection("kit." + id + ".effects").getKeys(false)) {

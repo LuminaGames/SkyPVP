@@ -22,6 +22,7 @@ public class Kit {
     private ItemStack kitLeggings;
     private ItemStack kitBoots;
 
+    private String displayName;
     private ItemStack displayIcon;
     private int price;
 
@@ -113,5 +114,13 @@ public class Kit {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }

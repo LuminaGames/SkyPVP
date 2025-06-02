@@ -3,12 +3,14 @@ package lol.vedant.skypvp.kit;
 import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.kit.Kit;
 import lol.vedant.skypvp.api.utils.Utils;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ public class KitManager {
     }
 
     public void load() {
+        loadedKits.clear();
         File folder = new File(plugin.getDataFolder(), "kits");
         if(folder.listFiles() == null) {
             return;
@@ -71,6 +74,27 @@ public class KitManager {
     public Kit getKitById(String id) {
         return loadedKits.get(id);
     }
+
+    public YamlConfiguration getKitFile(String id) {
+        File folder = new File(plugin.getDataFolder(), "kits");
+        File kit = new File(folder, id + ".yml");
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(kit);
+        return config;
+    }
+
+    public void saveKitFile(String id, YamlConfiguration config) {
+        File folder = new File(plugin.getDataFolder(), "kits");
+        File kit = new File(folder, id + ".yml");
+
+        try {
+            config.save(kit);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public Map<String, Kit> getLoadedKits() {
         return loadedKits;
