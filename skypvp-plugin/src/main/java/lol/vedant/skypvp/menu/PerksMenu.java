@@ -39,17 +39,17 @@ public class PerksMenu extends FastInv {
     private void setItems() {
         ItemStack bulldozerItem = new ItemBuilder(XMaterial.NETHER_WART.parseMaterial())
                 .name(Utils.cc(messages.getString(Message.PERK_BULLDOZER_TITLE)))
-                .lore(Utils.cc(messages.getString(Message.PERK_BULLDOZER_DESCRIPTION)))
+                .lore(Utils.cc(messages.getList(Message.PERK_BULLDOZER_DESCRIPTION)))
                 .build();
 
         ItemStack expItem = new ItemBuilder(XMaterial.ANVIL.parseMaterial())
                 .name(Utils.cc(messages.getString(Message.PERK_EXPERIENCE_TITLE)))
-                .lore(Utils.cc(messages.getString(Message.PERK_EXPERIENCE_DESCRIPTION)))
+                .lore(Utils.cc(messages.getList(Message.PERK_EXPERIENCE_DESCRIPTION)))
                 .build();
 
         ItemStack speedItem = new ItemBuilder(XMaterial.FEATHER.parseMaterial())
                 .name(Utils.cc(messages.getString(Message.PERK_SPEED_TITLE)))
-                .lore(Utils.cc(messages.getString(Message.PERK_SPEED_DESCRIPTION)))
+                .lore(Utils.cc(messages.getList(Message.PERK_SPEED_DESCRIPTION)))
                 .build();
 
         this.perkStats = plugin.getDb().getPerks(player.getUniqueId());
