@@ -3,7 +3,9 @@ package lol.vedant.skypvp.menu;
 import com.cryptomorin.xseries.XMaterial;
 import fr.mrmicky.fastinv.FastInv;
 import fr.mrmicky.fastinv.ItemBuilder;
+import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.kit.Kit;
+import lol.vedant.skypvp.api.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,13 +15,13 @@ public class ConfirmPurchaseMenu extends FastInv {
     public ConfirmPurchaseMenu(Kit kit) {
         super(27, "Confirm Purchase");
 
-        ItemStack confirmItem = new ItemBuilder(XMaterial.EMERALD.parseMaterial())
-                .name("&aConfirm Purchase")
-                .lore("&7Price: " + kit.getPrice())
+        ItemStack confirmItem = new ItemBuilder(XMaterial.GREEN_TERRACOTTA.parseMaterial())
+                .name(Utils.cc("&aConfirm Purchase"))
+                .lore(Utils.cc("&7Price: " + kit.getPrice()))
                 .build();
 
-        ItemStack cancelItem = new ItemBuilder(XMaterial.REDSTONE_BLOCK.parseMaterial())
-                .name("&cCancel")
+        ItemStack cancelItem = new ItemBuilder(XMaterial.RED_TERRACOTTA.parseMaterial())
+                .name(Utils.cc("&cCancel"))
                 .build();
 
         setItem(11, confirmItem, e -> buyKit((Player) e.getWhoClicked(), kit));
@@ -35,7 +37,7 @@ public class ConfirmPurchaseMenu extends FastInv {
     }
 
     private void buyKit(Player player, Kit kit) {
-        // Implement your buying logic here
+        SkyPVP.getPlugin().getDb().saveKitStats(player.getUniqueId(), kit.getId());
         player.sendMessage("You have bought the kit: " + kit.getId());
         player.closeInventory();
     }

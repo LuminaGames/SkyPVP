@@ -1,5 +1,6 @@
 package lol.vedant.skypvp.database;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -144,28 +145,23 @@ public class SQLite implements Database {
     @Override
     public List<String> getKitStats(UUID player) {
         String sql = "SELECT * FROM skypvp_kits WHERE uuid = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, player.toString());
-            KitStats stats = new KitStats();
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-
-                Gson gson = new Gson();
-                List<String> unlockedKits = new ArrayList<>();
-                JsonElement jelem = gson.fromJson(rs.getString("unlocked_kits"), JsonElement.class);
-                jelem.getAsJsonObject().getAsJsonArray().forEach(k -> unlockedKits.add(k.getAsString()));
-
-                return unlockedKits;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String json = rs.getString("unlocked_kits");
+                    if (json == null || json.isEmpty()) {
+                        return new ArrayList<>();  // return empty list if no kits stored
+                    }
+                    return new Gson().fromJson(json, new TypeToken<List<String>>() {}.getType());
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return null;
+        return new ArrayList<>();
     }
+
 
     @Override
     public void saveKitStats(UUID player, String kitId) {
@@ -326,5 +322,15 @@ public class SQLite implements Database {
 
         if (renew)
             this.connection = DriverManager.getConnection(url);
+    }
+
+    @Override
+    public void disable() {
+        try {
+            checkConnection();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

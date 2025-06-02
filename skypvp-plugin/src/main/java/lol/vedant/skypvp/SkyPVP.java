@@ -3,10 +3,12 @@ package lol.vedant.skypvp;
 import fr.mrmicky.fastinv.FastInvManager;
 import lol.vedant.skypvp.api.config.ConfigPath;
 import lol.vedant.skypvp.api.kit.KitSerializer;
+import lol.vedant.skypvp.api.utils.Utils;
 import lol.vedant.skypvp.commands.SkyPVPCommand;
 import lol.vedant.skypvp.commands.admin.AdminHelpCommand;
 import lol.vedant.skypvp.commands.admin.BuildModeCommand;
 import lol.vedant.skypvp.commands.admin.setup.*;
+import lol.vedant.skypvp.commands.kit.CreateKitCommand;
 import lol.vedant.skypvp.commands.kit.KitCommand;
 import lol.vedant.skypvp.commands.kit.PreviewKitCommand;
 import lol.vedant.skypvp.commands.perks.PerkCommand;
@@ -26,6 +28,7 @@ import lol.vedant.skypvp.scoreboard.Scoreboard;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commandframework.CommandFramework;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.GameRule;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -106,6 +109,7 @@ public final class SkyPVP extends JavaPlugin {
                 new PerkCommand(),
                 new StatsCommand(),
                 new BuildModeCommand(),
+                new CreateKitCommand(),
                 new TestKitCmd(),
                 new GiveKitCmd(),
                 new PreviewKitCommand(this),
@@ -118,10 +122,38 @@ public final class SkyPVP extends JavaPlugin {
 
         FastInvManager.register(this);
 
+        setWeatherAndTime();
+
     }
 
     @Override
     public void onDisable() {
+        getLogger().info("Thank you for using Sky PVP");
+        getLogger().info("Closing database connections...");
+        database.disable();
+    }
+
+    private void setWeatherAndTime() {
+        getLogger().info("Loading worlds...");
+        getServer().getWorlds().forEach((world) -> {
+
+            if (Utils.getServerVersion() == 18) {
+                // 1.8.8 logic
+                world.setStorm(false);
+                world.setThundering(false);
+                world.setGameRuleValue("doDaylightCycle", "false");
+                world.setGameRuleValue("doWeatherCycle", "false");
+                world.setTime(1000);
+            } else {
+                world.setStorm(false);
+                world.setThundering(false);
+                world.setTime(1000); // Morning
+                world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+                world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+            }
+
+
+        });
 
     }
 

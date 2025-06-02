@@ -55,6 +55,10 @@
                             <pattern>fr.mrmicky.fastinv</pattern>
                             <shadedPattern>lol.vedant.skypvp.libs.fastinv</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>com.google.gson</pattern>
+                            <shadedPattern>lol.vedant.skypvp.libs.gson</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -102,6 +106,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>4.21.0</version>
+        </dependency>
+        <dependency>
             <groupId>lol.vedant</groupId>
             <artifactId>skypvp-api</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -136,7 +145,7 @@
         <dependency>
             <groupId>fr.mrmicky</groupId>
             <artifactId>FastInv</artifactId>
-            <version>3.0.4</version>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

@@ -343,4 +343,13 @@ public class MySQL implements Database {
         }
         return null;
     }
+
+    @Override
+    public void disable() {
+        try(Connection connection = dataSource.getConnection()) {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package lol.vedant.skypvp.api.utils;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -62,6 +61,8 @@ public class Utils {
             return 119;
         } else if (version.contains("1.20")) {
             return 120;
+        } else if(version.contains("1.21")) {
+            return 121;
         }
         return 500;
     }

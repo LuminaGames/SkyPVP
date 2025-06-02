@@ -33,4 +33,5 @@ public interface Database {
 
     PerkStats getPerks(UUID player);
 
+    void disable();
 }

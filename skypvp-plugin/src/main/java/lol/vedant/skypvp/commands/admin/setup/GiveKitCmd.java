@@ -18,6 +18,7 @@ public class GiveKitCmd {
         KitSerializer serializer = new KitSerializer(SkyPVP.getPlugin());
         Player player = args.getSender();
         Kit testKit = serializer.loadKit("randomKit");
+        SkyPVP.getPlugin().getKitManager().giveKit(player, testKit);
         player.sendMessage("You have been given the test kit");
     }
 

@@ -12,6 +12,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 
 public class GameSpawnListener implements Listener {
 
@@ -32,6 +33,12 @@ public class GameSpawnListener implements Listener {
     //Disable hunger
     @EventHandler
     public void foodChangeEvent(FoodLevelChangeEvent e) {
+        e.setCancelled(true);
+    }
+
+    //Disable item drop
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent e) {
         e.setCancelled(true);
     }
 
