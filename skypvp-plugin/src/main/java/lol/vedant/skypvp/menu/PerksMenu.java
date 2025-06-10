@@ -9,6 +9,7 @@ import lol.vedant.skypvp.api.config.Message;
 import lol.vedant.skypvp.api.perks.PerkType;
 import lol.vedant.skypvp.api.stats.PerkStats;
 import lol.vedant.skypvp.api.utils.Utils;
+import lol.vedant.skypvp.perks.PerkManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -27,30 +28,23 @@ public class PerksMenu extends FastInv {
     private final Player player;
     private PerkStats perkStats;
     private PerkType activePerk;
+    private PerkManager manager;
 
     public PerksMenu(Player player) {
         super(27, Utils.cc("&6Your Perks"));
         this.plugin = SkyPVP.getPlugin();
         this.player = player;
+        this.manager = plugin.getPerkManager();
         setItems();
     }
 
 
     private void setItems() {
-        ItemStack bulldozerItem = new ItemBuilder(XMaterial.NETHER_WART.parseMaterial())
-                .name(Utils.cc(messages.getString(Message.PERK_BULLDOZER_TITLE)))
-                .lore(Utils.cc(messages.getList(Message.PERK_BULLDOZER_DESCRIPTION)))
-                .build();
 
-        ItemStack expItem = new ItemBuilder(XMaterial.ANVIL.parseMaterial())
-                .name(Utils.cc(messages.getString(Message.PERK_EXPERIENCE_TITLE)))
-                .lore(Utils.cc(messages.getList(Message.PERK_EXPERIENCE_DESCRIPTION)))
-                .build();
-
-        ItemStack speedItem = new ItemBuilder(XMaterial.FEATHER.parseMaterial())
-                .name(Utils.cc(messages.getString(Message.PERK_SPEED_TITLE)))
-                .lore(Utils.cc(messages.getList(Message.PERK_SPEED_DESCRIPTION)))
-                .build();
+        ItemStack bulldozerItem = manager.getPerk(PerkType.BULLDOZER).getDisplayItem();
+        ItemStack expItem = manager.getPerk(PerkType.EXPERIENCE).getDisplayItem();
+        ItemStack speedItem = manager.getPerk(PerkType.SPEED).getDisplayItem();
+        ItemStack juggernautItem = manager.getPerk(PerkType.JUGGERNAUT).getDisplayItem();
 
         this.perkStats = plugin.getDb().getPerks(player.getUniqueId());
         this.activePerk = plugin.getDb().getActivePerk(player.getUniqueId());
@@ -75,6 +69,14 @@ public class PerksMenu extends FastInv {
         if(perkStats.hasSpeed()  && activePerk != PerkType.SPEED) {
             setItem(12, replacePlaceholder(speedItem, Utils.cc("&aUnlocked! &eClick to equip")));
         } else if (activePerk.equals(PerkType.SPEED)) {
+            setItem(12, replacePlaceholder(speedItem, Utils.cc("&aCurrently Active")));
+        } else {
+            setItem(12, replacePlaceholder(speedItem, Utils.cc("&fBuy for: &6 " + config.getString("perks.speed.price"))));
+        }
+
+        if(perkStats.hasJuggernaut()  && activePerk != PerkType.JUGGERNAUT) {
+            setItem(12, replacePlaceholder(speedItem, Utils.cc("&aUnlocked! &eClick to equip")));
+        } else if (activePerk.equals(PerkType.JUGGERNAUT)) {
             setItem(12, replacePlaceholder(speedItem, Utils.cc("&aCurrently Active")));
         } else {
             setItem(12, replacePlaceholder(speedItem, Utils.cc("&fBuy for: &6 " + config.getString("perks.speed.price"))));

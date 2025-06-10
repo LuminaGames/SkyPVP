@@ -5,5 +5,6 @@ public enum PerkType {
     BULLDOZER,
     SPEED,
     EXPERIENCE,
+    JUGGERNAUT,
     NONE
 }

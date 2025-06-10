@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.perks.PerkType;
-import lol.vedant.skypvp.api.stats.KitStats;
 import lol.vedant.skypvp.api.stats.PerkStats;
 import lol.vedant.skypvp.api.stats.PlayerStats;
 import org.bukkit.entity.Player;
@@ -82,11 +81,9 @@ public class SQLite implements Database {
                 "experience INT DEFAULT 0" +
                 ")";
         String sql2 = "CREATE TABLE IF NOT EXISTS skypvp_perks (" +
-                "uuid VARCHAR(255) PRIMARY KEY," +
-                "bulldozer_perk BOOLEAN DEFAULT FALSE," +
-                "exp_perk BOOLEAN DEFAULT FALSE," +
-                "speed_perk BOOLEAN DEFAULT FALSE," +
-                "active_perk VARCHAR(255))";
+                "uuid VARCHAR(36) PRIMARY KEY," +
+                "unlocked_perks TEXT," +
+                "active_perk VARCHAR(100))";
         String sql3 = "CREATE TABLE IF NOT EXISTS skypvp_kits (" +
                 "uuid VARCHAR(255) PRIMARY KEY," +
                 "unlocked_kits LONGTEXT);";
@@ -264,23 +261,39 @@ public class SQLite implements Database {
 
     @Override
     public void addPerk(UUID player, PerkType perk) {
-        String sql;
-        if (perk.equals(PerkType.BULLDOZER)) {
-            sql = "UPDATE skypvp_perks SET bulldozer_perk = 1 WHERE uuid = ?";
-        } else if (perk.equals(PerkType.EXPERIENCE)) {
-            sql = "UPDATE skypvp_perks SET exp_perk = 1 WHERE uuid = ?";
-        } else if (perk.equals(PerkType.SPEED)) {
-            sql = "UPDATE skypvp_perks SET speed_perk = 1 WHERE uuid = ?";
-        } else {
-            return;
-        }
+        String sql1 = "SELECT * FROM skypvp_perks WHERE uuid = ?";
+        String sql2 = "INSERT INTO skypvp_perks (uuid, unlocked_perks) VALUES (?, ?)";
+        String sql3 = "UPDATE skypvp_perks SET unlocked_perks = ? WHERE uuid = ?";
 
+        Gson gson = new Gson();
         try {
-            checkConnection();
+            PreparedStatement selectPs = connection.prepareStatement(sql1);
+            selectPs.setString(1, player.toString());
+            ResultSet rs = selectPs.executeQuery();
 
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, player.toString());
-            ps.executeUpdate();
+            JsonArray unlockedKitsJson;
+            if (rs.next()) {
+                // Retrieve existing unlocked kits
+                String unlockedKitsString = rs.getString("unlocked_perks");
+                unlockedKitsJson = gson.fromJson(unlockedKitsString, JsonArray.class);
+                if (!unlockedKitsJson.contains(gson.toJsonTree(perk.toString()))) {
+                    unlockedKitsJson.add(perk.toString());
+                }
+                // Update existing entry
+                PreparedStatement updatePs = connection.prepareStatement(sql3);
+                updatePs.setString(1, gson.toJson(unlockedKitsJson));
+                updatePs.setString(2, player.toString());
+                updatePs.executeUpdate();
+            } else {
+                // Create new entry
+                unlockedKitsJson = new JsonArray();
+                unlockedKitsJson.add(perk.toString());
+                PreparedStatement insertPs = connection.prepareStatement(sql2);
+                insertPs.setString(1, player.toString());
+                insertPs.setString(2, gson.toJson(unlockedKitsJson));
+                insertPs.executeUpdate();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -299,11 +312,12 @@ public class SQLite implements Database {
             ResultSet rs = ps.executeQuery();
 
             if(rs.next()) {
-                return new PerkStats(
-                        rs.getBoolean("bulldozer_perk"),
-                        rs.getBoolean("speed_perk"),
-                        rs.getBoolean("exp_perk")
-                );
+                Gson gson = new Gson();
+                List<String> unlockedPerks = new ArrayList<>();
+                JsonElement jelem = gson.fromJson(rs.getString("unlocked_perks"), JsonElement.class);
+                jelem.getAsJsonObject().getAsJsonArray().forEach(k -> unlockedPerks.add(k.getAsString()));
+
+                return new PerkStats(unlockedPerks);
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -2,27 +2,29 @@ package lol.vedant.skypvp.api.stats;
 
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class PerkStats {
 
-    private final boolean bulldozer;
-    private final boolean speed;
-    private final boolean experience;
+    private final List<String> unlockedKits;
 
-    public PerkStats(boolean bulldozer, boolean speed, boolean experience) {
-        this.bulldozer = bulldozer;
-        this.speed = speed;
-        this.experience = experience;
+    public PerkStats(List<String> unlockedKits) {
+        this.unlockedKits = unlockedKits;
     }
 
     public boolean hasBulldozer() {
-        return bulldozer;
+        return unlockedKits.contains("bulldozer");
     }
 
     public boolean hasSpeed() {
-        return speed;
+        return unlockedKits.contains("speed");
     }
 
     public boolean hasExperience() {
-        return experience;
+        return unlockedKits.contains("experience");
+    }
+
+    public boolean hasJuggernaut() {
+        return unlockedKits.contains("juggernaut");
     }
 }
