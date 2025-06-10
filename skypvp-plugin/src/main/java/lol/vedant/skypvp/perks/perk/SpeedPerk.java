@@ -1,15 +1,21 @@
 package lol.vedant.skypvp.perks.perk;
 
+import com.cryptomorin.xseries.XMaterial;
+import fr.mrmicky.fastinv.ItemBuilder;
 import lol.vedant.skypvp.SkyPVP;
+import lol.vedant.skypvp.api.config.Message;
 import lol.vedant.skypvp.api.perks.Perk;
 import lol.vedant.skypvp.api.perks.PerkType;
-import org.bukkit.Bukkit;
+import lol.vedant.skypvp.api.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import static lol.vedant.skypvp.SkyPVP.messages;
 
 public class SpeedPerk implements Perk, Listener {
 
@@ -49,6 +55,14 @@ public class SpeedPerk implements Perk, Listener {
     @Override
     public boolean isActive(Player player) {
         return player.hasPotionEffect(PotionEffectType.SPEED);
+    }
+
+    @Override
+    public ItemStack getDisplayItem() {
+        return new ItemBuilder(XMaterial.FEATHER.parseMaterial())
+                .name(Utils.cc(messages.getString(Message.PERK_SPEED_TITLE)))
+                .lore(Utils.cc(messages.getList(Message.PERK_SPEED_DESCRIPTION)))
+                .build();
     }
 
     @EventHandler

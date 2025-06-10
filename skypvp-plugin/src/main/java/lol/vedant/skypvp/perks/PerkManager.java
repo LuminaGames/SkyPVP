@@ -5,6 +5,7 @@ import lol.vedant.skypvp.api.perks.Perk;
 import lol.vedant.skypvp.api.perks.PerkType;
 import lol.vedant.skypvp.perks.perk.BulldozerPerk;
 import lol.vedant.skypvp.perks.perk.ExpPerk;
+import lol.vedant.skypvp.perks.perk.JuggernautPerk;
 import lol.vedant.skypvp.perks.perk.SpeedPerk;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,7 +31,8 @@ public class PerkManager {
         registerPerks(
                 new BulldozerPerk("Bulldozer", config.getInt("perks.bulldozer.price")),
                 new ExpPerk("Experience", config.getInt("perks.experience.price")),
-                new SpeedPerk("Speed", config.getInt("perks.speed.price"))
+                new SpeedPerk("Speed", config.getInt("perks.speed.price")),
+                new JuggernautPerk("Juggernaut", config.getInt("perks.juggernaut.price"))
         );
 
     }
@@ -43,15 +45,10 @@ public class PerkManager {
         return this.perks;
     }
 
-    public Perk getPerk(String name) {
-        for (Map.Entry<PerkType, Perk> entry : perks.entrySet()) {
-            Perk perk = entry.getValue();
-            if (perk.getName().equalsIgnoreCase(name)) {
-                return perk;
-            }
-        }
-        return null;
+    public Perk getPerk(PerkType type) {
+        return perks.get(type);
     }
+
 
     public void applyPerk(Player player, PerkType perk) {
         Perk p = perks.get(perk);
