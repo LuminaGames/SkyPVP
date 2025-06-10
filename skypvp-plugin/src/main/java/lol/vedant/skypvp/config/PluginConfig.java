@@ -40,8 +40,10 @@ public class PluginConfig extends Config {
                 "&6server.com"
         ));
 
+        //Perk prices
         config.addDefault("perks.bulldozer.price", 10000);
         config.addDefault("perks.speed.price", 15000);
+        config.addDefault("perks.juggernaut.price", 12500);
         config.addDefault("perks.experience.price", 7500);
 
         config.options().copyDefaults(true);
