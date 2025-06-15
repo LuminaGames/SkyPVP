@@ -4,10 +4,12 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XPotion;
 import fr.mrmicky.fastinv.ItemBuilder;
 import lol.vedant.skypvp.api.config.Message;
+import lol.vedant.skypvp.api.events.SpawnExitEvent;
 import lol.vedant.skypvp.api.perks.Perk;
 import lol.vedant.skypvp.api.perks.PerkType;
 import lol.vedant.skypvp.api.utils.Utils;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
@@ -59,5 +61,11 @@ public class JuggernautPerk implements Perk, Listener {
                 .name(Utils.cc(messages.getString(Message.PERK_JUGGERNAUT_TITLE)))
                 .lore(Utils.cc(messages.getList(Message.PERK_JUGGERNAUT_DESCRIPTION)))
                 .build();
+    }
+
+    @EventHandler
+    public void onSpawnLeave(SpawnExitEvent e) {
+        Player player = e.getPlayer();
+        apply(player);
     }
 }

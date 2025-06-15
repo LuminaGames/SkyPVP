@@ -27,6 +27,7 @@ public class PerkManager {
         Bukkit.getPluginManager().registerEvents(new BulldozerPerk("Bulldozer", config.getInt("perks.bulldozer.price")), plugin);
         Bukkit.getPluginManager().registerEvents(new ExpPerk("Experience", config.getInt("perks.experience.price")), plugin);
         Bukkit.getPluginManager().registerEvents(new SpeedPerk("Speed", config.getInt("perks.speed.price")), plugin);
+        Bukkit.getPluginManager().registerEvents(new JuggernautPerk("Juggernaut", config.getInt("perks.juggernaut.price")), plugin);
 
         registerPerks(
                 new BulldozerPerk("Bulldozer", config.getInt("perks.bulldozer.price")),
