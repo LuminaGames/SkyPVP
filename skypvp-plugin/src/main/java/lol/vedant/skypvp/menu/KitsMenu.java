@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -41,12 +42,12 @@ public class KitsMenu extends FastInv {
             if(kit.getDisplayIcon() == null) {
                 displayItem = new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
                         .name(kit.getDisplayName())
-                        .lore("&7Left-click to buy", "&7Right-click to preview")
+                        .lore(Utils.cc(Arrays.asList("&7Left-click to buy", "&7Right-click to preview", "&ePrice: &f" + kit.getPrice())))
                         .build();
             } else {
                 displayItem = new ItemBuilder(kit.getDisplayIcon())
                         .name(kit.getDisplayName())
-                        .lore("&7Left-click to buy", "&7Right-click to preview")
+                        .lore(Utils.cc(Arrays.asList("&7Left-click to buy", "&7Right-click to preview", "&ePrice: &f" + kit.getPrice())))
                         .build();
             }
 

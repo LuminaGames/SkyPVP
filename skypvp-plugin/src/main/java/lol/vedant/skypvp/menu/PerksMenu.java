@@ -75,11 +75,11 @@ public class PerksMenu extends FastInv {
         }
 
         if(perkStats.hasJuggernaut()  && activePerk != PerkType.JUGGERNAUT) {
-            setItem(12, replacePlaceholder(speedItem, Utils.cc("&aUnlocked! &eClick to equip")));
+            setItem(12, replacePlaceholder(juggernautItem, Utils.cc("&aUnlocked! &eClick to equip")));
         } else if (activePerk.equals(PerkType.JUGGERNAUT)) {
-            setItem(12, replacePlaceholder(speedItem, Utils.cc("&aCurrently Active")));
+            setItem(12, replacePlaceholder(juggernautItem, Utils.cc("&aCurrently Active")));
         } else {
-            setItem(12, replacePlaceholder(speedItem, Utils.cc("&fBuy for: &6 " + config.getString("perks.speed.price"))));
+            setItem(12, replacePlaceholder(juggernautItem, Utils.cc("&fBuy for: &6 " + config.getString("perks.speed.price"))));
         }
     }
 

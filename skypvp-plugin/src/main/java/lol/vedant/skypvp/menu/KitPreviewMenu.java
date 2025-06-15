@@ -3,14 +3,22 @@ package lol.vedant.skypvp.menu;
 import com.cryptomorin.xseries.XMaterial;
 import fr.mrmicky.fastinv.FastInv;
 import fr.mrmicky.fastinv.ItemBuilder;
+import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.kit.Kit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import java.util.Map;
 
 public class KitPreviewMenu extends FastInv {
 
+    SkyPVP plugin = SkyPVP.getPlugin();
+
     public KitPreviewMenu(Kit kit) {
-        super(54, "Kit Preview");
+        super(54, kit.getDisplayName() + " Preview");
+
+        addCloseHandler(e -> {
+            new KitsMenu(plugin.getKitManager().getLoadedKits(), 1).open((Player) e.getPlayer());
+        });
 
         // Add inventory items
         for (Map.Entry<Integer, ItemStack> entry : kit.getInventory().entrySet()) {

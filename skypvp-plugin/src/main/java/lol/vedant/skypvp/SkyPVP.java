@@ -35,8 +35,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
+import java.util.Date;
 
 public final class SkyPVP extends JavaPlugin {
+
 
     private static SkyPVP instance;
     public static PluginConfig config;
@@ -50,33 +52,41 @@ public final class SkyPVP extends JavaPlugin {
     private Database database;
 
     public static boolean PLACEHOLDER_API = false;
+    public static long START_TIME;
 
     @Override
     public void onEnable() {
         instance = this;
+        START_TIME = System.currentTimeMillis();
 
+        getLogger().info("Loading configurations...");
         config = new PluginConfig(this, "config", getDataFolder().getAbsolutePath());
         messages = new MessageConfig(this, "messages", getDataFolder().getAbsolutePath());
 
         if(config.getBoolean(ConfigPath.ENABLE_BSTATS)) {
+            getLogger().info("Hooked into bStats!");
             Metrics metrics = new Metrics(this, 22796);
         }
 
         commandManager = new CommandFramework(instance);
 
+        getLogger().info("Trying to load arenas...");
         gameManager = new GameManager();
         gameManager.loadArena();
 
         if(config.getBoolean(ConfigPath.DB_ENABLED)) {
+            getLogger().info("Using MySQL database for storage");
             database = new MySQL();
             database.init();
         } else {
+            getLogger().info("Using SQLite database for storage");
             database = new SQLite();
             database.init();
         }
 
         kitSerializer = new KitSerializer(this);
 
+        getLogger().info("Loading kits...");
         kitManager = new KitManager(this);
         kitManager.load();
 
@@ -86,6 +96,7 @@ public final class SkyPVP extends JavaPlugin {
             return;
         }
 
+        getLogger().info("Loading perks...");
         perkManager = new PerkManager();
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -124,6 +135,8 @@ public final class SkyPVP extends JavaPlugin {
 
         setWeatherAndTime();
 
+        long startingTime = new Date().getTime() - START_TIME;
+        getLogger().info("Plugin was loaded in " + startingTime + "ms");
     }
 
     @Override

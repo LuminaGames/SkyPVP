@@ -40,6 +40,7 @@ public class KitManager {
                 plugin.getLogger().info("Kit " + id + " was loaded successfully");
             }
         }
+        plugin.getLogger().info("Successfully loaded " + loadedKits.size() + " kits");
     }
 
     public void giveKit(Player player, Kit kit) {

@@ -35,6 +35,7 @@ public class PerkManager {
                 new JuggernautPerk("Juggernaut", config.getInt("perks.juggernaut.price"))
         );
 
+        plugin.getLogger().info("Successfully registered " + perks.size() + " perks");
     }
 
     public void registerPerks(Perk... perks) {
