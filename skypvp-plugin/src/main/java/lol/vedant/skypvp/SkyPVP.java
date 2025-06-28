@@ -5,12 +5,16 @@ import lol.vedant.skypvp.api.config.ConfigPath;
 import lol.vedant.skypvp.api.kit.KitSerializer;
 import lol.vedant.skypvp.api.utils.Utils;
 import lol.vedant.skypvp.commands.SkyPVPCommand;
+import lol.vedant.skypvp.commands.SkyPVPDeveloperCommands;
 import lol.vedant.skypvp.commands.admin.AdminHelpCommand;
 import lol.vedant.skypvp.commands.admin.BuildModeCommand;
 import lol.vedant.skypvp.commands.admin.setup.*;
-import lol.vedant.skypvp.commands.kit.CreateKitCommand;
+import lol.vedant.skypvp.commands.kit.admin.KitCreateCommand;
 import lol.vedant.skypvp.commands.kit.KitCommand;
-import lol.vedant.skypvp.commands.kit.PreviewKitCommand;
+import lol.vedant.skypvp.commands.kit.KitPreviewCommand;
+import lol.vedant.skypvp.commands.kit.admin.KitEditCommand;
+import lol.vedant.skypvp.commands.kit.admin.KitIconCommand;
+import lol.vedant.skypvp.commands.kit.admin.KitPriceCommand;
 import lol.vedant.skypvp.commands.perks.PerkCommand;
 import lol.vedant.skypvp.commands.stats.StatsCommand;
 import lol.vedant.skypvp.config.MessageConfig;
@@ -114,19 +118,28 @@ public final class SkyPVP extends JavaPlugin {
         );
 
         registerCommands(
+                //Basic Commands
+                new PerkCommand(),
+                new StatsCommand(),
+
+                //Setup Commands
                 new SetSpawnCommand(),
                 new SpawnAreaCommand(),
                 new SetupCommand(),
-                new PerkCommand(),
-                new StatsCommand(),
                 new BuildModeCommand(),
-                new CreateKitCommand(),
-                new TestKitCmd(),
-                new GiveKitCmd(),
-                new PreviewKitCommand(this),
+
+                //Kit related commands
+                new KitCreateCommand(),
+                new KitPreviewCommand(this),
                 new KitCommand(this),
+                new KitCreateCommand(),
+                new KitEditCommand(),
+                new KitIconCommand(),
+                new KitPriceCommand(),
+
                 new SkyPVPCommand(),
-                new AdminHelpCommand()
+                new AdminHelpCommand(),
+                new SkyPVPDeveloperCommands()
         );
 
         Scoreboard.initialize();

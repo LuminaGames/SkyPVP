@@ -40,7 +40,13 @@ public class KitManager {
                 plugin.getLogger().info("Kit " + id + " was loaded successfully");
             }
         }
+
+        if(loadedKits.size() == 0) {
+            //copy default kits to the kit folder.
+        }
         plugin.getLogger().info("Successfully loaded " + loadedKits.size() + " kits");
+
+
     }
 
     public void giveKit(Player player, Kit kit) {

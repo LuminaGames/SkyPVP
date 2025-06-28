@@ -1,11 +1,10 @@
 package lol.vedant.skypvp.menu;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import fr.mrmicky.fastinv.FastInv;
-import fr.mrmicky.fastinv.ItemBuilder;
 import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.config.Message;
+import lol.vedant.skypvp.api.perks.Perk;
 import lol.vedant.skypvp.api.perks.PerkType;
 import lol.vedant.skypvp.api.stats.PerkStats;
 import lol.vedant.skypvp.api.utils.Utils;
@@ -40,48 +39,35 @@ public class PerksMenu extends FastInv {
 
 
     private void setItems() {
-
-        ItemStack bulldozerItem = manager.getPerk(PerkType.BULLDOZER).getDisplayItem();
-        ItemStack expItem = manager.getPerk(PerkType.EXPERIENCE).getDisplayItem();
-        ItemStack speedItem = manager.getPerk(PerkType.SPEED).getDisplayItem();
-        ItemStack juggernautItem = manager.getPerk(PerkType.JUGGERNAUT).getDisplayItem();
-
         this.perkStats = plugin.getDb().getPerks(player.getUniqueId());
         this.activePerk = plugin.getDb().getActivePerk(player.getUniqueId());
 
-        //Bulldozer
-        if(perkStats.hasBulldozer()  && activePerk != PerkType.BULLDOZER) {
-            setItem(10, replacePlaceholder(bulldozerItem, Utils.cc("&aUnlocked! &eClick to equip")));
-        } else if (activePerk.equals(PerkType.BULLDOZER)) {
-            setItem(10, replacePlaceholder(bulldozerItem, Utils.cc("&aCurrently Active")));
-        } else {
-            setItem(10, replacePlaceholder(bulldozerItem, Utils.cc("&fBuy for: &6 " + config.getString("perks.bulldozer.price"))));
-        }
+        System.out.println(perkStats.hasBulldozer());
+        System.out.println(activePerk);
 
-        if(perkStats.hasExperience() && activePerk != PerkType.EXPERIENCE) {
-            setItem(11, replacePlaceholder(expItem, Utils.cc("&aUnlocked! &eClick to equip")));
-        } else if (activePerk.equals(PerkType.EXPERIENCE)) {
-            setItem(11, replacePlaceholder(expItem, Utils.cc("&aCurrently Active")));
-        } else {
-            setItem(11, replacePlaceholder(expItem, Utils.cc("&fBuy for: &6 " + config.getString("perks.experience.price"))));
-        }
+        int slot = 10;
+        for (PerkType perkType : PerkType.values()) {
+            if (perkType == PerkType.NONE) continue;
 
-        if(perkStats.hasSpeed()  && activePerk != PerkType.SPEED) {
-            setItem(12, replacePlaceholder(speedItem, Utils.cc("&aUnlocked! &eClick to equip")));
-        } else if (activePerk.equals(PerkType.SPEED)) {
-            setItem(12, replacePlaceholder(speedItem, Utils.cc("&aCurrently Active")));
-        } else {
-            setItem(12, replacePlaceholder(speedItem, Utils.cc("&fBuy for: &6 " + config.getString("perks.speed.price"))));
-        }
+            ItemStack perkItem = manager.getPerk(perkType).getDisplayItem();
+            String pricePath = "perks." + perkType.name().toLowerCase() + ".price";
+            String displayMessage;
 
-        if(perkStats.hasJuggernaut()  && activePerk != PerkType.JUGGERNAUT) {
-            setItem(12, replacePlaceholder(juggernautItem, Utils.cc("&aUnlocked! &eClick to equip")));
-        } else if (activePerk.equals(PerkType.JUGGERNAUT)) {
-            setItem(12, replacePlaceholder(juggernautItem, Utils.cc("&aCurrently Active")));
-        } else {
-            setItem(12, replacePlaceholder(juggernautItem, Utils.cc("&fBuy for: &6 " + config.getString("perks.speed.price"))));
+            if (isPerkUnlocked(perkType)) {
+                if (activePerk == perkType) {
+                    displayMessage = Utils.cc("&aCurrently Active");
+                } else {
+                    displayMessage = Utils.cc("&aUnlocked! &eClick to equip");
+                }
+            } else {
+                String price = config.getString(pricePath);
+                displayMessage = Utils.cc("&fBuy for: &6" + price);
+            }
+
+            setItem(slot++, replacePlaceholder(perkItem, displayMessage));
         }
     }
+
 
 
     @Override
@@ -95,6 +81,8 @@ public class PerksMenu extends FastInv {
             perk = PerkType.EXPERIENCE;
         } else if(slot == 12) {
             perk = PerkType.SPEED;
+        } else if (slot == 13) {
+            perk = PerkType.JUGGERNAUT;
         }
 
         if(perk == activePerk) {
@@ -126,6 +114,8 @@ public class PerksMenu extends FastInv {
                 return perkStats.hasSpeed();
             case EXPERIENCE:
                 return perkStats.hasExperience();
+            case JUGGERNAUT:
+                return perkStats.hasJuggernaut();
             default:
                 return false;
         }

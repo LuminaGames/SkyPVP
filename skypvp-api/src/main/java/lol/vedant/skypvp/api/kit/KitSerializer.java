@@ -103,8 +103,17 @@ public class KitSerializer {
 
         YamlConfiguration config = YamlConfiguration.loadConfiguration(kitFile);
         Kit kit = new Kit(id);
+        if(config.contains("kit." + id + ".displayName")) {
+            kit.setDisplayName(config.getString("kit." + id + ".displayName"));
+        }
         int price = config.getInt("kit." + id + ".price");
         kit.setPrice(price);
+
+        if(config.contains("kit." + id + ".displayItem")) {
+            ItemStack displayIcon = XItemStack.deserialize(config.getConfigurationSection("kit." + id + ".displayItem"));
+            kit.setDisplayIcon(displayIcon);
+        };
+
 
         // Load Inventory
         Map<Integer, ItemStack> inventory = new HashMap<>();

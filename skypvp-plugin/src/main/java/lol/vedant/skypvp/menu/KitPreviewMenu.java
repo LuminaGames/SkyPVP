@@ -16,10 +16,6 @@ public class KitPreviewMenu extends FastInv {
     public KitPreviewMenu(Kit kit) {
         super(54, kit.getDisplayName() + " Preview");
 
-        addCloseHandler(e -> {
-            new KitsMenu(plugin.getKitManager().getLoadedKits(), 1).open((Player) e.getPlayer());
-        });
-
         // Add inventory items
         for (Map.Entry<Integer, ItemStack> entry : kit.getInventory().entrySet()) {
             if(entry.getKey() > 35) {

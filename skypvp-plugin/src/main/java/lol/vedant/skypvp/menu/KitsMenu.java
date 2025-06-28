@@ -21,12 +21,14 @@ public class KitsMenu extends FastInv {
     private final List<Kit> kits;
     private final int page;
     private final Map<String, Kit> kitsMap;
+    private final Player player;
 
-    public KitsMenu(Map<String, Kit> kitsMap, int page) {
+    public KitsMenu(Player player, Map<String, Kit> kitsMap, int page) {
         super(54, Utils.cc("&6Kits Menu"));
         this.kits = new ArrayList<>(kitsMap.values());
         this.page = page;
         this.kitsMap = kitsMap;
+        this.player = player;
         setItems();
     }
 
@@ -34,35 +36,41 @@ public class KitsMenu extends FastInv {
         int startIndex = (page - 1) * 10;
         int endIndex = Math.min(startIndex + 10, kits.size());
 
+        List<String> unlockedKits = SkyPVP.getPlugin().getDb().getKitStats(player.getUniqueId());
+
         for (int i = startIndex; i < endIndex; i++) {
             Kit kit = kits.get(i);
+            boolean unlocked = unlockedKits != null && unlockedKits.contains(kit.getId());
+            boolean free = kit.getPrice() == 0;
 
-            ItemStack displayItem;
+            String displayName = kit.getDisplayName() != null ? kit.getDisplayName() : kit.getId();
 
-            if(kit.getDisplayIcon() == null) {
-                displayItem = new ItemBuilder(XMaterial.IRON_SWORD.parseMaterial())
-                        .name(kit.getDisplayName())
-                        .lore(Utils.cc(Arrays.asList("&7Left-click to buy", "&7Right-click to preview", "&ePrice: &f" + kit.getPrice())))
-                        .build();
+            List<String> lore = new ArrayList<>();
+            if (unlocked) {
+                lore.add(Utils.cc("&aUnlocked! &7Left-click to equip"));
+            } else if (free) {
+                lore.add(Utils.cc("&aFree! &7Left-click to claim"));
             } else {
-                displayItem = new ItemBuilder(kit.getDisplayIcon())
-                        .name(kit.getDisplayName())
-                        .lore(Utils.cc(Arrays.asList("&7Left-click to buy", "&7Right-click to preview", "&ePrice: &f" + kit.getPrice())))
-                        .build();
+                lore.add(Utils.cc("&7Left-click to buy"));
+                lore.add(Utils.cc("&ePrice: &f" + kit.getPrice()));
             }
+            lore.add(Utils.cc("&7Right-click to preview"));
 
-            setItem(i - startIndex, displayItem, e -> {
-                Player player = (Player) e.getWhoClicked();
-                List<String> unlockedKits = SkyPVP.getPlugin().getDb().getKitStats(player.getUniqueId());
+            Material iconMaterial = kit.getDisplayIcon() != null ? kit.getDisplayIcon().getType() : XMaterial.IRON_SWORD.parseMaterial();
+
+            ItemStack displayItem = new ItemBuilder(iconMaterial)
+                    .name(Utils.cc(displayName))
+                    .lore(Utils.cc(lore))
+                    .build();
+
+            int slot = i - startIndex;
+            setItem(slot, displayItem, e -> {
                 if (e.isLeftClick()) {
-                    if(unlockedKits != null && unlockedKits.contains(kit.getId())) {
-                        SkyPVP.getPlugin().getKitManager().giveKit(player, kit);
-                    } else if(kit.getPrice() == 0) {
+                    if (unlocked || free) {
                         SkyPVP.getPlugin().getKitManager().giveKit(player, kit);
                     } else {
                         new ConfirmPurchaseMenu(kit).open(player);
                     }
-
                 } else if (e.isRightClick()) {
                     new KitPreviewMenu(kit).open(player);
                 }
@@ -71,18 +79,21 @@ public class KitsMenu extends FastInv {
 
         // Navigation buttons
         if (page > 1) {
-            setItem(45, new ItemBuilder(Material.ARROW).name("&aPrevious Page").build(), e -> new KitsMenu(kitsMap, page - 1).open((Player) e.getWhoClicked()));
+            setItem(45, new ItemBuilder(Material.ARROW).name("&aPrevious Page").build(),
+                    e -> new KitsMenu(player, kitsMap, page - 1).open((Player) e.getWhoClicked()));
         }
         if (endIndex < kits.size()) {
-            setItem(53, new ItemBuilder(Material.ARROW).name("&aNext Page").build(), e -> new KitsMenu(kitsMap, page + 1).open((Player) e.getWhoClicked()));
+            setItem(53, new ItemBuilder(Material.ARROW).name("&aNext Page").build(),
+                    e -> new KitsMenu(player, kitsMap, page + 1).open((Player) e.getWhoClicked()));
         }
 
-        // Placeholder items for empty slots
-        ItemStack placeholder = new ItemBuilder(XMaterial.GRAY_STAINED_GLASS_PANE.parseMaterial()).name(" ").build();
+        // Fill remaining slots with placeholder
+        ItemStack placeholder = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE.parseMaterial()).name(" ").build();
         for (int i = 0; i < getInventory().getSize(); i++) {
             if (getInventory().getItem(i) == null) {
                 setItem(i, placeholder);
             }
         }
     }
+
 }

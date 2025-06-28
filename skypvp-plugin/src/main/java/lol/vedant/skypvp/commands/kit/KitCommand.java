@@ -1,5 +1,6 @@
 package lol.vedant.skypvp.commands.kit;
 
+import com.cryptomorin.xseries.XItemStack;
 import lol.vedant.skypvp.SkyPVP;
 import lol.vedant.skypvp.api.kit.Kit;
 import lol.vedant.skypvp.api.utils.Utils;
@@ -9,8 +10,10 @@ import lol.vedant.skypvp.menu.KitsMenu;
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 
 public class KitCommand {
@@ -36,79 +39,14 @@ public class KitCommand {
             return;
         }
 
-        new KitsMenu(plugin.getKitManager().getLoadedKits(), 1).open(player);
+        new KitsMenu(player, plugin.getKitManager().getLoadedKits(), 1).open(player);
     }
 
-    @Command(
-            name = "kit.setdisplayname",
-            aliases = {"kits.displayname"},
-            desc = "Set a display name for a kit",
-            permission = "skypvp.kits.admin",
-            senderType = Command.SenderType.PLAYER
-    )
-    public void displayName(CommandArguments args) {
 
-        String kitId = args.getArgument(0);
-        String displayName = args.getArgument(1);
 
-        YamlConfiguration config = manager.getKitFile(kitId);
-        config.set("kit." + kitId + ".displayName", displayName);
-        manager.saveKitFile(kitId, config);
 
-        manager.load();
-    }
 
-    @Command(
-            name="kit.setprice",
-            aliases = {"kit.price"},
-            desc = "Set the price of a kit",
-            permission = "skypvp.kits.admin",
-            senderType = Command.SenderType.PLAYER
-    )
-    public void setPrice(CommandArguments args) {
-        Player player = args.getSender();
-        String kitId = args.getArgument(0);
-        int price = 0;
 
-        if(args.getArgument(0) == null) {
-            player.sendMessage(Utils.cc("&cPlease specify a Kit ID"));
-            return;
-        }
 
-        if(args.getArgument(1) == null) {
-            player.sendMessage(Utils.cc("&cPlease specify an amount"));
-            return;
-        }
-
-        try {
-            Integer.parseInt(args.getArgument(1));
-        } catch (NumberFormatException e) {
-            player.sendMessage(Utils.cc("Please specify a numerical value"));
-            return;
-        }
-
-        YamlConfiguration file = plugin.getKitManager().getKitFile(kitId);
-        file.set("kit." + kitId + ".price", price);
-
-        plugin.getKitManager().saveKitFile(kitId, file);
-
-        player.sendMessage(Utils.cc("&aPrice set to " + price + " successfully!"));
-    }
-
-    @Command(
-            name = "kit.preview",
-            aliases = {"kits.preview"},
-            desc = "Preview a kit",
-            senderType = Command.SenderType.PLAYER
-    )
-    public void preview(CommandArguments args) {
-        String id = args.getArgument(0);
-        Player player = args.getSender();
-        player.sendMessage("Showing preview for " + id);
-        Kit kit = manager.getKitById(id);
-
-        new KitPreviewMenu(kit).open(args.getSender());
-
-    }
 
 }

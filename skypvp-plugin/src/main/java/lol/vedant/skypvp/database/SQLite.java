@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -82,7 +83,7 @@ public class SQLite implements Database {
                 ")";
         String sql2 = "CREATE TABLE IF NOT EXISTS skypvp_perks (" +
                 "uuid VARCHAR(36) PRIMARY KEY," +
-                "unlocked_perks TEXT," +
+                "unlocked_perks TEXT DEFAULT '[]'," +
                 "active_perk VARCHAR(100))";
         String sql3 = "CREATE TABLE IF NOT EXISTS skypvp_kits (" +
                 "uuid VARCHAR(255) PRIMARY KEY," +
@@ -311,19 +312,27 @@ public class SQLite implements Database {
             ps.setString(1, player.toString());
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 Gson gson = new Gson();
                 List<String> unlockedPerks = new ArrayList<>();
-                JsonElement jelem = gson.fromJson(rs.getString("unlocked_perks"), JsonElement.class);
-                jelem.getAsJsonObject().getAsJsonArray().forEach(k -> unlockedPerks.add(k.getAsString()));
+
+                String rawJson = rs.getString("unlocked_perks");
+                JsonElement jelem = gson.fromJson(rawJson, JsonElement.class);
+
+                if (jelem != null && jelem.isJsonArray()) {
+                    jelem.getAsJsonArray().forEach(k -> unlockedPerks.add(k.getAsString()));
+                }
 
                 return new PerkStats(unlockedPerks);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
+
 
     private void checkConnection() throws SQLException {
         boolean renew = false;

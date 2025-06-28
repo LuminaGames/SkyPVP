@@ -8,11 +8,11 @@ import me.despical.commandframework.CommandArguments;
 import org.bukkit.entity.Player;
 
 
-public class PreviewKitCommand {
+public class KitPreviewCommand {
 
     private final SkyPVP plugin;
 
-    public PreviewKitCommand(SkyPVP plugin) {
+    public KitPreviewCommand(SkyPVP plugin) {
         this.plugin = plugin;
     }
 

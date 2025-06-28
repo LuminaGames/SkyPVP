@@ -10,21 +10,22 @@ public class PerkStats {
 
     public PerkStats(List<String> unlockedKits) {
         this.unlockedKits = unlockedKits;
+        System.out.println(unlockedKits);
     }
 
     public boolean hasBulldozer() {
-        return unlockedKits.contains("bulldozer");
+        return unlockedKits.contains("BULLDOZER");
     }
 
     public boolean hasSpeed() {
-        return unlockedKits.contains("speed");
+        return unlockedKits.contains("SPEED");
     }
 
     public boolean hasExperience() {
-        return unlockedKits.contains("experience");
+        return unlockedKits.contains("EXPERIENCE");
     }
 
     public boolean hasJuggernaut() {
-        return unlockedKits.contains("juggernaut");
+        return unlockedKits.contains("JUGGERNAUT");
     }
 }
