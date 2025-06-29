@@ -6,7 +6,7 @@
 
   <groupId>lol.vedant</groupId>
   <artifactId>SkyPVP</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-BETA</version>
   <packaging>pom</packaging>
 
   <name>SkyPVP</name>

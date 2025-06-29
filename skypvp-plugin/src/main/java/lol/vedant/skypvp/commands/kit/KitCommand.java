@@ -35,7 +35,7 @@ public class KitCommand {
         Player player = args.getSender();
 
         if(plugin.getKitManager().getLoadedKits().isEmpty()) {
-            args.getSender().sendMessage(Component.text("<red>There are no kits loaded in the plugin").content());
+            args.getSender().sendMessage(Utils.cc("&cThere are no loaded kits in the plugin"));
             return;
         }
 

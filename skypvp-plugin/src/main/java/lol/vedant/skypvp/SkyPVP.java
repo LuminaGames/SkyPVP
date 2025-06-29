@@ -118,17 +118,12 @@ public final class SkyPVP extends JavaPlugin {
         );
 
         registerCommands(
-                //Basic Commands
                 new PerkCommand(),
                 new StatsCommand(),
-
-                //Setup Commands
                 new SetSpawnCommand(),
                 new SpawnAreaCommand(),
                 new SetupCommand(),
                 new BuildModeCommand(),
-
-                //Kit related commands
                 new KitCreateCommand(),
                 new KitPreviewCommand(this),
                 new KitCommand(this),
@@ -136,7 +131,6 @@ public final class SkyPVP extends JavaPlugin {
                 new KitEditCommand(),
                 new KitIconCommand(),
                 new KitPriceCommand(),
-
                 new SkyPVPCommand(),
                 new AdminHelpCommand(),
                 new SkyPVPDeveloperCommands()

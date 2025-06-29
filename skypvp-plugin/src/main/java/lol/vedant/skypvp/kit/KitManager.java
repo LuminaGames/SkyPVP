@@ -9,10 +9,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 @SuppressWarnings("ALL")
 public class KitManager {
@@ -28,12 +31,19 @@ public class KitManager {
     public void load() {
         loadedKits.clear();
         File folder = new File(plugin.getDataFolder(), "kits");
-        if(folder.listFiles() == null) {
+
+        if (!folder.exists() || folder.listFiles() == null || folder.listFiles().length == 0) {
+            extractDefaultKits();
+        }
+
+        File[] files = folder.listFiles();
+        if (files == null) {
+            plugin.getLogger().warning("No kits found to load.");
             return;
         }
 
-        for (File kit : folder.listFiles()) {
-            if(kit.getName().endsWith(".yml")) {
+        for (File kit : files) {
+            if (kit.getName().endsWith(".yml")) {
                 String id = kit.getName().replace(".yml", "");
                 Kit k = plugin.getKitSerializer().loadKit(id);
                 loadedKits.put(id, k);
@@ -41,12 +51,52 @@ public class KitManager {
             }
         }
 
-        if(loadedKits.size() == 0) {
-            //copy default kits to the kit folder.
-        }
         plugin.getLogger().info("Successfully loaded " + loadedKits.size() + " kits");
+    }
 
 
+    private void extractDefaultKits() {
+        String resourceFolder = "kits";
+        File targetDir = new File(plugin.getDataFolder(), resourceFolder);
+
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+
+        try {
+            CodeSource codeSource = getClass().getProtectionDomain().getCodeSource();
+            if (codeSource != null) {
+                URL jarUrl = codeSource.getLocation();
+                try (JarInputStream jarInputStream = new JarInputStream(jarUrl.openStream())) {
+                    JarEntry entry;
+
+                    while ((entry = jarInputStream.getNextJarEntry()) != null) {
+                        String entryName = entry.getName();
+
+                        if (entryName.startsWith(resourceFolder + "/") && !entry.isDirectory()) {
+                            InputStream in = plugin.getResource(entryName);
+                            if (in == null) continue;
+
+                            File outFile = new File(plugin.getDataFolder(), entryName);
+                            outFile.getParentFile().mkdirs();
+
+                            try (OutputStream out = new FileOutputStream(outFile)) {
+                                byte[] buffer = new byte[1024];
+                                int length;
+                                while ((length = in.read(buffer)) > 0) {
+                                    out.write(buffer, 0, length);
+                                }
+                            }
+
+                            in.close();
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            plugin.getLogger().severe("Failed to extract default kits: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void giveKit(Player player, Kit kit) {
