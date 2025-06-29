@@ -13,7 +13,7 @@ public class SetSpawnCommand {
     @Command(
             name = "skypvp.setspawn",
             desc = "Set the spawn of the arena",
-            permission = "skypvp.command.admin",
+            permission = "skypvp.setup.admin",
             senderType = Command.SenderType.PLAYER
     )
     public void execute(CommandArguments args) {

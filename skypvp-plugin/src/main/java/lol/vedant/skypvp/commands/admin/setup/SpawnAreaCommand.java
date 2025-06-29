@@ -11,7 +11,7 @@ public class SpawnAreaCommand {
     @Command(
             name = "skypvp.spawnarea",
             desc = "Set the spawn region in the spawn area.",
-            permission = "skypvp.commands.admin",
+            permission = "skypvp.setup.admin",
             senderType = Command.SenderType.PLAYER
     )
     public void execute(CommandArguments args) {

@@ -9,7 +9,7 @@ public class PerkCommand {
 
     @Command(
             name = "perk",
-            desc = "Activate or deactive your unlocked perks",
+            desc = "Activate or deactivate your unlocked perks",
             aliases = {"perks"},
             senderType = Command.SenderType.PLAYER
     )

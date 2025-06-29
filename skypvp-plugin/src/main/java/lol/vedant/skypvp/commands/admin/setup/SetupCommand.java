@@ -10,7 +10,7 @@ public class SetupCommand {
     @Command(
             name = "skypvp.setup",
             desc = "Get help related to setup for skypvp plugin",
-            permission = "skypvp.commands.admin"
+            permission = "skypvp.setup.admin"
     )
     public void execute(CommandArguments args) {
         CommandSender sender = args.getSender();

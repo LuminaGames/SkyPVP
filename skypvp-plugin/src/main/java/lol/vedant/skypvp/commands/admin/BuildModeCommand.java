@@ -13,6 +13,7 @@ public class BuildModeCommand {
     @Command(
             name="skypvp.build",
             desc = "Toggle the build mode.",
+            permission = "skypvp.command.build",
             senderType = Command.SenderType.PLAYER
     )
     public void execute(CommandArguments args) {

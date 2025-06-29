@@ -22,7 +22,7 @@ public class SkyPVPDeveloperCommands {
             name = "skypvp.dumploadedkits",
             desc = "Dump loaded kits",
             senderType = Command.SenderType.BOTH,
-            permission = "skypvp.kits.admin"
+            permission = "skypvp.command.admin"
     )
     public void dumpLoadedKits(CommandArguments args) {
         Player player = args.getSender();
@@ -41,7 +41,7 @@ public class SkyPVPDeveloperCommands {
             name = "skypvp.dumploadedperks",
             desc = "Dump loaded perks",
             senderType = Command.SenderType.BOTH,
-            permission = "skypvp.kits.admin"
+            permission = "skypvp.command.admin"
     )
     public void dumPerks(CommandArguments args) {
         Player player = args.getSender();

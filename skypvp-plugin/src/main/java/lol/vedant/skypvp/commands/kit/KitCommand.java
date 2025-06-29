@@ -27,7 +27,6 @@ public class KitCommand {
     @Command(
             name = "kit",
             aliases = {"kits"},
-            permission = "skypvp.kits.admin",
             desc = "Buy or Preview kits in the SkyPvP gamemode",
             senderType = Command.SenderType.PLAYER
     )
