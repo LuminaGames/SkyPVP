@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +49,7 @@ public class MySQL implements Database {
     @Override
     public void init() {
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setPoolName("Delivery-pool");
+        hikariConfig.setPoolName("SkyPVP-pool");
         hikariConfig.setMaximumPoolSize(poolSize);
         hikariConfig.setMaxLifetime(maxLifetime);
         hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);

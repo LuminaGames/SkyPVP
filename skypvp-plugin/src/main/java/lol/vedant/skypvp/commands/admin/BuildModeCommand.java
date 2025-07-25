@@ -21,7 +21,7 @@ public class BuildModeCommand {
 
         if (plugin.getGameManager().hasBuildMode(player)) {
             player.sendMessage(Utils.cc("&cYou have turned off build mode."));
-            plugin.getGameManager().enableBuildMode(player);
+            plugin.getGameManager().disableBuildMode(player);
         }  else {
             player.sendMessage(Utils.cc("&aYou have enabled build mode."));
             plugin.getGameManager().enableBuildMode(player);

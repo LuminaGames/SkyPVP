@@ -9,6 +9,7 @@ public class AdminHelpCommand {
 
     @Command(
             name = "skypvp.admin",
+            aliases = {"skypvp.admin.help"},
             desc = "Admin commands for the SkyPVP plugin",
             permission = "skypvp.command.admin",
             senderType = Command.SenderType.BOTH
